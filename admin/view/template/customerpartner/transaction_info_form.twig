@@ -1,0 +1,117 @@
+{{ header }}{{ column_left }}
+<div id="content">
+  <div class="page-header">
+   <div class="container-fluid">
+      <h1><?php echo $heading_title; ?></h1>
+      <div class="pull-right">
+        <button type="button" data-toggle="tooltip" title="{{ entry_refund }}" class="btn btn-danger" onclick="confirm('{{ text_confirm }}') ? $('#form-refund').submit() : false;"><i class="fa fa-repeat"></i></button>
+        <a href="{{ back }}" data-toggle="tooltip" title="Back" class="btn btn-primary"><i class="fa fa-reply"></i></a>
+      </div>
+      <h1>{{ heading_title }}</h1>
+      <ul class="breadcrumb">
+        {% for breadcrumb in breadcrumbs %}
+        <li><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+        {% endfor %}
+      </ul>
+       </div>
+       </div>
+     <div class="container-fluid">
+    {% if error_warning %}
+    <div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i> {{ error_warning }}
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+    </div>
+   {% endif %}
+    {% if success %}
+    <div class="alert alert-success"><i class="fa fa-check-circle"></i> {{ success }}
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+    </div>
+    {% endif %}
+       <div class="panel panel-default">
+       <div class="panel-heading">
+        <h1 class="panel-title"><i class="fa fa-pencil"></i> <b>{{ entry_order_id }}{{ results['order_id']}}</b></h1>
+      </div>
+      <form action="{{action}}" method="post" enctype="multipart/form-data" id="form-refund">
+        <input type="hidden" name="order_id_num" value="{{ results.order_id }}">
+         <table  class="table table-bordered table-hover">
+         <tr>
+          <td><b>{{ entry_payment }}</b></td>
+          <td><b>{{ entry_shipping }}</b></td>
+         </tr>
+         <tr>
+           <td>
+           {{ results['customer'] }}<br>
+           {{ results['payment_address_1'] }}<br>
+           {{ results['payment_address_2'] }}{{ results['payment_postcode'] }}<br>
+           {{ results['payment_zone'] }}<br>
+            {{ results['payment_country'] }}<br>
+           </td>
+           <td>
+            {{ results['customer'] }}<br>
+           {{ results['payment_method'] }}<br>
+           {{ results['shipping_address_1'] }}<br>
+           {{ results['shipping_country'] }}<br>
+           </td>
+           </tr>
+         </table>
+         <table class="table table-bordered table-hover">
+            <tthead>
+            <tr>
+              <td></td>
+              <td>{{ entry_seller_name }}</td>
+              <td>{{ entry_id }}</td>
+              <td>{{ entry_refund_amount }}</td>
+            </tr>
+          </thead>
+          <tbody>
+            {% for seller in sellers %}
+              <tr>
+                <td class="text-center col-sm-1"><input type="checkbox" name="selected[]" value="{{ seller.seller_id }}" {% if seller.refund_status is defined and seller.refund_status %}{{ "disabled" }}{% endif %}/></td>
+                <td>{{ seller.seller_name }}</td>
+                <td>{{ seller.order_id }}</td>
+                <td>{{ seller.refund_amt }}</td>
+              </tr>
+              <tr>
+                  <td></td>
+                  <td colspan="3">
+                  <table class="table table-bordered table-hover">
+                    <thead>
+                        <td>{{ entry_product }}</td>
+                        <td>{{ entry_model }}</td>
+                        <td>{{ entry_quantity }}</td>
+                        <td>{{ entry_unit }}</td>
+                        <td>{{ entry_admin }}</td>
+                        <td>{{ entry_seller }}</td>
+                        <td>{{ entry_total }}</td>
+                        <td>{{ entry_refund_status}}</td>
+                    </thead>
+                    <tbody>
+                      {% for product in seller.products %}
+                        <tr>
+                          <td>{{ product.name }}</td>
+                          <td>{{ product.model }}</td>
+                          <td>{{ product.quantity }}</td>
+                          <td>{{ product.price }}</td>
+                          <td>{{ product.admin }}</td>
+                          <td>{{ product.customer }}</td>
+                          <td>{{ product.total }}</td>
+                          <td>
+                            {% if seller.refund_status is defined and seller.refund_status %}
+                              {{ entry_refunded }}
+                            {% else %}
+                              {{ entry_refund }}
+                            {% endif %}
+                            </td>
+                        </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+                  </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+         </table>
+         </form>
+      </div>
+    </div>
+</div>
+{{footer}}

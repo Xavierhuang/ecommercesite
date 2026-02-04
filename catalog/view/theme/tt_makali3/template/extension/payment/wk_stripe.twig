@@ -1,0 +1,26 @@
+{% if not testmode %}
+<div class="alert alert-warning alert-dismissible">
+  <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+  {{ text_testmode }}
+</div>
+{% endif %}
+{% if error_warning is defined and error_warning %}
+<div class="alert alert-danger alert-dismissible">
+  <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+  {{ error_warning }}
+</div>
+{% else %}
+<script type="text/javascript">
+var stripe = Stripe(
+'{{ stripe_keys.publishable_key }}',
+{
+  betas: ['checkout_beta_4']
+}
+);
+stripe.redirectToCheckout({
+  sessionId: '{{ session_id }}',
+}).then(function (result) {
+  console.log("testing");
+});
+</script>
+{% endif %}

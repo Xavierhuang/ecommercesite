@@ -1,0 +1,65 @@
+{% if (registry.has('theme_options') == constant('true')) %} 
+  {% set theme_options = registry.get('theme_options') %}
+  {% set class = 'col-6 col-md-4 col-lg-3' %}
+  {% if (theme_options.get( 'product_per_pow' ) == 1) %}{% set class = 'col-12' %}{% endif %}
+  {% if (theme_options.get( 'product_per_pow' ) == 2) %}{% set class = 'col-12 col-md-6' %}{% endif %}
+  {% if (theme_options.get( 'product_per_pow' ) == 3) %}{% set class = 'col-12 col-md-6 col-lg-4' %}{% endif %}
+  {% if (theme_options.get( 'product_per_pow' ) == 4) %}{% set class = 'col-6 col-md-4 col-lg-3' %}{% endif %}
+  {% if (theme_options.get( 'product_per_pow' ) == 5) %}{% set class = 'col-6 col-md-4 col-lg-25' %}{% endif %}
+  {% if (theme_options.get( 'product_per_pow' ) == 6) %}{% set class = 'col-6 col-md-3 col-lg-2' %}{% endif %}
+
+  <div class="container-indent">
+    <div class="container container-fluid-custom-mobile-padding">
+      <div class="tt-block-title">
+        <h1 class="tt-title">{{ heading_title }}</h1>
+      </div>
+
+      {% if (theme_options.get( 'product_scroll_featured' ) != '0') %} 
+      <div class="tt-carousel-products row arrow-location-tab arrow-location-tab01 tt-alignment-img tt-layout-product-item slick-animated-show-js" data-item="{{ theme_options.get( 'product_per_pow' ) }}">
+      {% else %}
+      <div class="row tt-layout-product-item">
+      {% endif %}
+        <div class="{{ class }}">
+          {% for pts_blog in pts_blogs %}
+            {% if loop.index > 1 %}
+              </div>
+              <div class="{{ class }}">
+            {% endif %}
+             <!-- featured store  -->  
+			   
+			  {% set theme_options = registry.get('theme_options') %}
+		{% set config = registry.get('config') %}
+
+		<div class="tt-product thumbprod-center">
+		<div style="float: left;  margin-left: 15px; margin-top: 5px;">
+			{{ pts_blog.date }}
+		</div>	
+			<div class="tt-image-box">
+				<a href="{{ pts_blog.href }}">
+					{% if (pts_blog.thumb) %} 
+						<span class="tt-img">
+						<img src="{{ pts_blog.thumb }}" data-src="{{ pts_blog.thumb }}" alt="{{ pts_blog.title }}"></span>
+					{% else %} 
+						<span class="tt-img"><img src="catalog/view/theme/wokiee/img/loader.svg" data-src="image/no_image.jpg" alt=""></span>
+					{% endif %} 
+					
+				</a>
+			</div>
+			<div class="tt-description">
+				<h2 class="tt-title"><a href="{{ pts_blog.href }}">{{ pts_blog.title }}</a></h2>
+			</div>
+			<div class="tt-row">
+				<p>{{ pts_blog.description }}</p>
+			</div>
+			<div class="tt-row">
+				<a href="{{ pts_blog.href }}">{{ text_readmore }}</a>
+			</div>
+		</div> 
+			   
+			 <!-- featured store  -->     
+          {% endfor %} 
+        </div>
+      </div>
+    </div>
+  </div>
+{% endif %}

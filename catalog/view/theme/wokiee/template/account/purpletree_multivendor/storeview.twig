@@ -1,0 +1,539 @@
+{{ header }}
+<script type="text/javascript" src="catalog/view/javascript/jquery/swiper/js/swiper.jquery.js"></script>
+<link href="catalog/view/javascript/font-awesome/css/font-awesome.css" rel="stylesheet" />
+	<div class="tt-breadcrumb">
+		<div class="container">
+			<ul> 
+				{% for breadcrumb in breadcrumbs %}
+		     	<li><a href="{{ breadcrumb.href }}">  {{ breadcrumb.text }} </a></li>
+				{% endfor %}
+			</ul>
+		</div>
+	</div>
+<div class="pts-container container">
+	<style>
+	.page-title-wrapper{
+	       float: left !important;
+		   
+	} 
+	.right-block{
+	       position: relative;
+	}
+	</style>
+	{% if error_warning %}
+	<div class="alert pts-alert-danger"><i class="fa fa-exclamation-circle"></i> {{ error_warning }}</div>
+	{% endif %}
+	<div class="pts-row d-flex row">
+	{% if column_right %}
+    {% set class = 'pts-col-sm-9 col-sm-9' %}
+	{% set classproducts = 'pts-col-lg-4 pts-col-md-4' %}
+    {% else %}
+    {% set class = 'pts-col-sm-12 col-sm-12' %}
+	{% set classproducts = 'pts-col-lg-3 pts-col-md-3' %}
+    {% endif %}
+	
+    <div id="content" class="{{ class }}">{{ content_top }}
+	
+	{% if storepage_layout %}
+			<div class="pts-row">
+				{% if store_video %}     
+				<div class="pts-col-sm-7">
+					<img src="{{ store_banner }}" style="margin-top: 1px; max-height:329px" class="img-responsive" alt="Image">
+				</div>
+				<div class="pts-col-sm-5 ptsvideo"> 
+					<iframe src="{{ store_video }}" style="height: 329px; width:100%"> </iframe>
+				</div>
+				{% else %} 
+				
+				<div class="pts-banner">
+					<img class="img-responsive" src="{{ store_banner }}" style="width:100%">
+				</div>
+				
+				{% endif %}
+			</div>				  
+			<div class="pts-row ptsrow2">
+				<div class="pts-col-sm-7 ptsinsidecol">
+					<div class="pts-well">
+						<div class="pts-col-sm-6">
+							<div class="pts-row" style="margin-bottom: 12px;">
+								<div class="pts-col-sm-6" >
+									<img src="{{ store_logo }}" class="img-responsive" alt="Image">
+								</div>
+								<div class="pts-col-sm-6">
+									<h4>{{ store_name }}</h4>
+									{% if seller_review_status %}
+									{% if store_rating.rating %}
+									<div class="rating pts-text-left">
+										{% for i in 1..5 %}
+										{% if store_rating.rating < i %} <span class="fa fa-stack star-seller"><i class="fa fa-star-o fa-stack-2x"></i></span> {% else %} <span class="fa fa-stack star-seller"><i class="fa fa-star fa-stack-2x" ></i><i class="fa fa-star-o fa-stack-2x"></i></span> {% endif %}
+										{% endfor %}({{ store_rating.rating|number_format(1) }})
+									</div>
+									{% else %}
+									{% for i in 1..5 %}
+									<span class="fa fa-stack star-seller"><i class="fa fa-star-o fa-stack-1x" ></i></span>
+									{% endfor %}({{ store_rating.rating|number_format(1) }})
+									{% endif %}
+									<div class="store-rating">
+										<a href="{{ store_review }}" target="_blank">{{ text_sellerreview }} ({{ store_rating['count'] }})</a>
+									</div>
+									{% endif %}
+								</div>
+							</div>
+							<div class="pts-row">
+								<div class="pts-col-sm-12" >
+									{% if (module_purpletree_multivendor_store_email) is not null %} <b>Email:</b>  {{ store_email }} {% endif %}<br>	
+									{% if (module_purpletree_multivendor_store_address) is not null %}<b>Address:</b>  {{ store_address }}
+									<p>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp{{ store_city }}{{ store_state }}<p/><p>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp{{ store_country }}{{ store_zipcode }}<p/>
+									{% endif %}<br>
+									{% if (module_purpletree_multivendor_store_phone) is not null %}<b>Tel. no:</b>  {{ store_phone }}{% endif %}<br>
+									{% if (module_purpletree_multivendor_store_social_link) is not null %}
+									<div class="social-icons d-flex justify-content-between">
+										{% if facebook_link != '' %}
+										<a target="_blank" href="{{ facebook_link }}"><i class="fa fa-facebook-square" style="margin-left:-3px"></i></a>
+										{% endif %}
+										{% if twitter_link != '' %}
+										<a target="_blank" href="{{ twitter_link  }}"><i class="fa fa-tumblr-square"></i></a>
+										{% endif %}
+										{% if google_link != '' %}
+										<a  target="_blank" href="{{ google_link }}"><i class="fa fa-google-plus-square"></i></a>
+										{% endif %}
+										{% if instagram_link != '' %}
+										<a  target="_blank" href="{{ instagram_link }}"><i class="fa fa-instagram"></i></a>
+										{% endif %}
+										{% if pinterest_link != '' %}
+										<a target="_blank" href="{{ pinterest_link }}"><i class="fa fa-pinterest-square"></i></a>
+										{% endif %}
+										{% if wesbsite_link != '' %}
+										<a target="_blank" href="{{ wesbsite_link }}"><i class="fa fa-globe"></i></a>
+										{% endif %}
+										{% if whatsapp_link != '' %}
+										<a target="_blank" href="{{ whatsapp_link }}"><i class="fa fa-whatsapp"></i></a>
+										{% endif %}
+									</div>
+									{% endif %}
+								</div>
+							</div>
+						</div>
+						<div class="pts-row">
+							<div class="pts-col-sm-6">
+								<b><h3 class="pts-text-right">{{ text_store_timings }}</h3></b>
+								<div class="pts-text-right">
+									<h4>{{ store_timings }}</h4>
+								</div>
+							</div>
+						</div>
+						
+					</div>
+					
+				</div>
+				
+				{% if google_map %}
+				<div class="pts-col-sm-5 ptsstoreimage"> 
+					<img src="{{ store_image }}" style="max-height:329px;" class="img-responsive" alt="Image">  
+				</div>
+				{% else %}
+				<div class="pts-col-sm-5 ptsstoreimage"> 
+					<img src="{{ store_image }}" style="max-height:329px; margin-bottom: 1%;" class="img-responsive" alt="Image">  
+				</div>
+				{% endif %}
+			</div>
+			<div class="pts-row">
+				{% if store_description %}  
+				<div class="pts-col-sm-7 ptsimage">
+					<div class="pts-well" id="ptsabout1">
+						{{ store_description }}								
+					</div>
+				</div>
+				{% endif %}
+				{% if google_map %}
+				<div class="pts-col-sm-5 ptsgooglemap"> 
+					<iframe src="{{ google_map }}" style="height: 329px; width:100%"> </iframe>
+				    {{ store_google_map }}
+				</div>
+				{% endif %}
+			</div>
+	 {% include 'wokiee/template/purpletree_wokiee_theme_elements/wrapper_top.twig' %}		
+<div id="mfilter-content-container">
+			{% if seller_products %}
+    {% set currently = theme_options.getCurrently() %}
+    <div class="tt-filters-options {% if theme_options.get( 'product_grid_type' ) == '1' or theme_options.get( 'product_grid_type' ) == '2' or theme_options.get( 'product_grid_type' ) == '3' %}desctop-no-sidebar{% endif %}">
+      <h1 class="tt-title">
+      </h1>
+      <div class="tt-btn-toggle">
+        <a href="#">{% if (theme_options.get( 'filter_text', config.get( 'config_language_id' ) ) != '') %} {{ theme_options.get( 'filter_text', config.get( 'config_language_id' ) ) }} {% else %}FILTER{% endif %}</a>
+      </div>
+      <div class="tt-sort d-none d-md-block">
+        <select onchange="location = this.value;">
+          {% for sorts in sorts %} 
+          {% if (sorts['value'] == sort ~ '-' ~ order) %} 
+          <option value="{{ sorts['href'] }}" selected="selected">{{ sorts['text'] }}</option>
+          {% else %} 
+          <option value="{{ sorts['href'] }}">{{ sorts['text'] }}</option>
+          {% endif %} 
+          {% endfor %} 
+        </select>
+        <select onchange="location = this.value;">
+          {% for limits in limits %} 
+          {% if (limits['value'] == limit) %} 
+          <option value="{{ limits['href'] }}" selected="selected">{{ limits['text'] }}</option>
+          {% else %} 
+          <option value="{{ limits['href'] }}">{{ limits['text'] }}</option>
+          {% endif %} 
+          {% endfor %} 
+        </select>
+      </div>
+      {% if not (theme_options.get( 'product_grid_type' ) == '3') %}
+        <div class="tt-quantity">
+          <a href="#" class="tt-col-one d-block d-md-none {% if currently == 'verylarge' %}active{% endif %}" data-value="tt-col-one"></a>
+          <a href="#" class="tt-col-two {% if theme_options.get( 'product_grid_type' ) == '1' or theme_options.get( 'product_grid_type' ) == '2' %}d-block d-md-none{% endif %} {% if currently == 'large' %}active{% endif %}" data-value="tt-col-two"></a>
+          <a href="#" class="tt-col-three d-none d-md-block {% if currently != 'large' and currently != 'small' and currently != 'verysmall' and currently != 'verylarge' %}active{% endif %}" data-value="tt-col-three"></a>
+          <a href="#" class="tt-col-four d-none d-md-block {% if currently == 'small' %}active{% endif %}" data-value="tt-col-four"></a>
+          {% if theme_options.get( 'product_grid_type' ) == '1' or theme_options.get( 'product_grid_type' ) == '2' %}
+            <a href="#" class="tt-col-six d-none d-md-block {% if currently == 'verysmall' %}active{% endif %}" data-value="tt-col-six"></a>
+          {% endif %}
+        </div>
+      {% endif %}
+    </div>
+
+    {% if theme_options.get( 'product_grid_type' ) == '3' %}
+      <div class="tt-product-listing-masonry">
+        <div class="tt-product-init tt-add-item">
+          {% for product in seller_products %} 
+            <div class="element-item {% if loop.index == 3 or loop.index == 6 %}double-size{% endif %}">
+                {% include 'wokiee/template/purpletree_wokiee_theme_elements/product_2.twig' %}
+            </div>
+          {% endfor %} 
+        </div>
+      </div>
+    {% else %}
+      {% set class = '4' %}
+      {% if theme_options.get( 'product_grid_type' ) == '1' %}
+        {% set class = '3' %}
+      {% endif %}
+      {% if theme_options.get( 'product_grid_type' ) == '2' %}
+        {% set class = '2' %}
+      {% endif %}
+      {% if currently == 'large' %}{% set class = '6' %}{% endif %}
+      {% if currently == 'small' %}{% set class = '3' %}{% endif %}
+      {% if currently == 'medium' %}{% set class = '4' %}{% endif %}
+      {% if currently == 'verylarge' %}{% set class = '12' %}{% endif %}
+      {% if currently == 'verysmall' %}{% set class = '2' %}{% endif %}
+      <div class="tt-product-listing row">
+        {% for product in seller_products %} 
+          <div class="col-{% if class == '12' %}12{% else %}6{% endif %} {% if class == '3' %}col-md-4 col-lg-{{ class }}{% elseif class == '2' %}col-md-4 col-lg-3 col-xl-{{ class }}{% else %}col-md-{{ class }}{% endif %} tt-col-item">
+              {% include 'wokiee/template/purpletree_wokiee_theme_elements/product_1.twig' %}
+          </div>
+        {% endfor %} 
+      </div>
+    {% endif %}
+    
+    <div class="row pagination-results">
+      <div class="col-sm-6 text-left">{{ pagination }}</div>
+      <div class="col-sm-6 text-right">{{ results }}</div>
+    </div>
+			{% else %}
+			<div class="pts-text-center"><h3>{{ text_no_results }}</h3></div>
+			{% endif %}
+	</div>
+	{% include 'wokiee/template/purpletree_wokiee_theme_elements/wrapper_bottom.twig' %}
+{% else %}
+		<h1 style="margin-top:0px !important">{{ store_name }}</h1>
+		<div class="pts-banner">
+			<img class="img-responsive" src="{{ store_banner }}" style="width:100%">
+		</div>
+		{% if not check_category_bar %}
+		<div class="pts-col-md-12 p-0 pts-form-group">
+			<div class="store-navbar">
+				<li>
+					<a href="{{ allCategory }}">{{ text_all }}</a>
+				</li>
+				{% if storeMenu %}
+				{% for key,value in storeMenu %}
+				<li>
+					<a href="{{ value.url }}">{{ value.name }}</a>
+				</li>
+				{% endfor %}
+				{% endif %}
+			</div>
+		</div>
+		{% endif %}
+		<div class="pts-row" style="margin-left:0">
+			<div class="store_top_div clearfix">
+				<div class="pts-col-sm-3  seller_pannel_store">
+					<div class="store_logo pts-text-center">
+						<img class="img-responsive m-auto" src="{{ store_logo }}">
+					</div>
+					{% if (module_purpletree_multivendor_seller_name) is not null %}
+					<div class="seller-name">
+						<h3 style="margin-top:10px;">{{ seller_name }}</h3>
+					</div>
+					{% endif %}
+					{% if seller_review_status %}
+					{% if store_rating.rating %}
+					<div class="rating pts-text-left">
+						{% for i in 1..5 %}
+						{% if store_rating.rating < i %} <span class="fa fa-stack star-seller"><i class="fa fa-star-o fa-stack-2x"></i></span> {% else %} <span class="fa fa-stack star-seller"><i class="fa fa-star fa-stack-2x" ></i><i class="fa fa-star-o fa-stack-2x"></i></span> {% endif %}
+						{% endfor %}({{ store_rating.rating|number_format(1) }})
+					</div>
+					{% else %}
+					{% for i in 1..5 %}
+					<span class="fa fa-stack star-seller"><i class="fa fa-star-o fa-stack-1x" ></i></span>
+					{% endfor %}({{ store_rating.rating|number_format(1) }})
+					{% endif %}
+					<div class="store-rating">
+						<a href="{{ store_review }}" target="_blank">{{ text_sellerreview }} ({{ store_rating['count'] }})</a>
+					</div>
+					{% endif %}
+					{% if (module_purpletree_multivendor_store_social_link) is not null %}
+					<div class="social-icons d-flex justify-content-between">
+						{% if facebook_link != '' %}
+						<a target="_blank" href="{{ facebook_link }}"><i class="fa fa-facebook-square" style="margin-left:-3px"></i></a> {% endif %}
+						{% if twitter_link != '' %}
+						<a target="_blank" href="{{ twitter_link  }}"><i class="fa fa-tumblr-square"></i></a>
+						{% endif %}
+						{% if google_link != '' %}
+						<a  target="_blank" href="{{ google_link }}"><i class="fa fa-google-plus-square"></i></a>
+						{% endif %}
+						{% if instagram_link != '' %}
+						<a  target="_blank" href="{{ instagram_link }}"><i class="fa fa-instagram"></i></a>
+						{% endif %}
+						{% if pinterest_link != '' %}
+						<a target="_blank" href="{{ pinterest_link }}"><i class="fa fa-pinterest-square"></i></a>
+						{% endif %}
+						{% if wesbsite_link != '' %}
+						<a target="_blank" href="{{ wesbsite_link }}"><i class="fa fa-globe"></i></a>
+						{% endif %}
+						
+						{% if whatsapp_link != '' %}
+						<a target="_blank" href="{{ whatsapp_link }}"><i class="fa fa-whatsapp"></i></a>
+						{% endif %}
+					</div>
+					{% endif %}
+					<div class="seller-info" style="">
+						<div class="contact-info">
+							{% if (module_purpletree_multivendor_store_email) is not null %}
+							<div class="seller-email">
+								<div><i class="fa fa-envelope" aria-hidden="true"></i> {{ store_email }}</div>
+							</div>
+							{% endif %}
+							{% if (module_purpletree_multivendor_store_phone) is not null %}
+							<div class="seller-phone">
+								<div><i class="fa fa-phone" aria-hidden="true"></i> {{ store_phone }}</div>
+							</div>
+							{% endif %}
+							{% if (module_purpletree_multivendor_store_address) is not null %}
+							<div class="seller-address">
+								<div><i class="fa fa-home" aria-hidden="true"></i>{{ store_address }}<p>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp{{ store_city }}{{ store_state }}<p/><p>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp{{ store_country }}{{ store_zipcode }}<p/></div>
+							</div>
+							{% endif %}
+						</div>
+						<div class="seller-about">
+							<div>
+								<a href="{{ store_about }}" target="_blank">{{ text_aboutstore }}
+									<i class="fa fa-angle-right pts-r"></i>
+								</a>
+							</div>
+						</div>
+						
+						<div class="seller-shipping">
+							<div>
+								<a href="{{ store_shipping_policy }}" target="_blank">{{ text_shippingpolicy }}
+									<i class="fa fa-angle-right pts-r"></i>
+								</a>
+							</div>
+						</div>
+						<div class="seller-return">
+							<div>
+								<a href="{{ store_return_policy }}" target="_blank">{{ text_returnpolicy }}
+									<i class="fa fa-angle-right pts-r"></i>
+								</a>
+							</div>
+						</div>								
+					</div>
+					<div class="seller-return pts-text-center">
+						<div class=" contact_seller_link">
+							<a href="{{ seller_contact }}" class="contact_seller" target="_blank"><img src="image/catalog/contact_seller.png" width="20px" height="20px" style="color:#fff"> {{text_sellercontact }}</a>
+						</div>
+					</div>
+					<div class="seller-name">
+						<h3>{{products_categories}}</h3>
+					</div>
+					<div class="pts-list-group" >
+						{% if categories %}
+						
+						{%for category in categories %}
+						<a href="{{category['href']}}" class="pts-list-group-item {{category['active']}}">{{ category['name'] }}</a>
+						{% if category.subcategories %}
+						{%for subcat in category.subcategories %}
+						<a href="{{subcat['href']}}" class="pts-list-group-item {{subcat['active']}}"><span>&nbsp;&nbsp;-&nbsp;</span>{{ subcat['name'] }}</a>
+						{% endfor %}
+						{% endif %}
+						{% endfor %}
+						{% endif %}
+					</div>
+				</div>
+				<div class="pts-col-sm-9">
+					<div class="pts-col-md-12 pts-form-group">
+						{{ store_description }}
+					</div>
+
+ {% include 'wokiee/template/purpletree_wokiee_theme_elements/wrapper_top.twig' %}
+<div id="mfilter-content-container"> 
+	{% if seller_products %}
+    {% set currently = theme_options.getCurrently() %}
+    <div class="tt-filters-options {% if theme_options.get( 'product_grid_type' ) == '1' or theme_options.get( 'product_grid_type' ) == '2' or theme_options.get( 'product_grid_type' ) == '3' %}desctop-no-sidebar{% endif %}">
+      <div class="tt-btn-toggle">
+        <a href="#">{% if (theme_options.get( 'filter_text', config.get( 'config_language_id' ) ) != '') %} {{ theme_options.get( 'filter_text', config.get( 'config_language_id' ) ) }} {% else %}FILTER{% endif %}</a>
+      </div>
+      <div class="tt-sort d-none d-md-block">
+        <select onchange="location = this.value;">
+          {% for sorts in sorts %} 
+          {% if (sorts['value'] == sort ~ '-' ~ order) %} 
+          <option value="{{ sorts['href'] }}" selected="selected">{{ sorts['text'] }}</option>
+          {% else %} 
+          <option value="{{ sorts['href'] }}">{{ sorts['text'] }}</option>
+          {% endif %} 
+          {% endfor %} 
+        </select>
+        <select onchange="location = this.value;">
+          {% for limits in limits %} 
+          {% if (limits['value'] == limit) %} 
+          <option value="{{ limits['href'] }}" selected="selected">{{ limits['text'] }}</option>
+          {% else %} 
+          <option value="{{ limits['href'] }}">{{ limits['text'] }}</option>
+          {% endif %} 
+          {% endfor %} 
+        </select>
+      </div>
+      {% if not (theme_options.get( 'product_grid_type' ) == '3') %}
+        <div class="tt-quantity">
+          <a href="#" class="tt-col-one d-block d-md-none {% if currently == 'verylarge' %}active{% endif %}" data-value="tt-col-one"></a>
+          <a href="#" class="tt-col-two {% if theme_options.get( 'product_grid_type' ) == '1' or theme_options.get( 'product_grid_type' ) == '2' %}d-block d-md-none{% endif %} {% if currently == 'large' %}active{% endif %}" data-value="tt-col-two"></a>
+          <a href="#" class="tt-col-three d-none d-md-block {% if currently != 'large' and currently != 'small' and currently != 'verysmall' and currently != 'verylarge' %}active{% endif %}" data-value="tt-col-three"></a>
+          <a href="#" class="tt-col-four d-none d-md-block {% if currently == 'small' %}active{% endif %}" data-value="tt-col-four"></a>
+          {% if theme_options.get( 'product_grid_type' ) == '1' or theme_options.get( 'product_grid_type' ) == '2' %}
+            <a href="#" class="tt-col-six d-none d-md-block {% if currently == 'verysmall' %}active{% endif %}" data-value="tt-col-six"></a>
+          {% endif %}
+        </div>
+      {% endif %}
+    </div>
+
+    {% if theme_options.get( 'product_grid_type' ) == '3' %}
+      <div class="tt-product-listing-masonry">
+        <div class="tt-product-init tt-add-item">
+          {% for product in seller_products %} 
+            <div class="element-item {% if loop.index == 3 or loop.index == 6 %}double-size{% endif %}">
+                {% include 'wokiee/template/purpletree_wokiee_theme_elements/product_2.twig' %}
+            </div>
+          {% endfor %} 
+        </div>
+      </div>
+    {% else %}
+      {% set class = '4' %}
+      {% if theme_options.get( 'product_grid_type' ) == '1' %}
+        {% set class = '3' %}
+      {% endif %}
+      {% if theme_options.get( 'product_grid_type' ) == '2' %}
+        {% set class = '2' %}
+      {% endif %}
+      {% if currently == 'large' %}{% set class = '6' %}{% endif %}
+      {% if currently == 'small' %}{% set class = '3' %}{% endif %}
+      {% if currently == 'medium' %}{% set class = '4' %}{% endif %}
+      {% if currently == 'verylarge' %}{% set class = '12' %}{% endif %}
+      {% if currently == 'verysmall' %}{% set class = '2' %}{% endif %}
+      <div class="tt-product-listing row">
+        {% for product in seller_products %} 
+          <div class="col-{% if class == '12' %}12{% else %}6{% endif %} {% if class == '3' %}col-md-4 col-lg-{{ class }}{% elseif class == '2' %}col-md-4 col-lg-3 col-xl-{{ class }}{% else %}col-md-{{ class }}{% endif %} tt-col-item">
+              {% include 'wokiee/template/purpletree_wokiee_theme_elements/product_1.twig' %}
+          </div>
+        {% endfor %} 
+      </div>
+    {% endif %}
+    
+    <div class="row pagination-results">
+      <div class="col-sm-6 text-left">{{ pagination }}</div>
+      <div class="col-sm-6 text-right">{{ results }}</div>
+    </div>
+					{% else %}
+					<div class="pts-text-center"><h3>{{ text_no_results }}</h3></div>
+					{% endif %}
+				</div>
+				</div> {% include 'wokiee/template/purpletree_wokiee_theme_elements/wrapper_bottom.twig' %}
+			</div>
+		</div>
+{% endif %}
+{{ content_bottom }}</div>
+{{ column_right }}</div>
+</div>
+{% if module_purpletree_multivendor_allow_live_chat %}
+{% if store_live_chat_enable %}
+{% if store_live_chat_code != '' %}
+<!--Start of Tawk.to Script-->
+<script>
+	$(document).ready(function(){
+		If($(window).width() < 768){
+			$('#ptsstorevideo').removeAttr('style');
+		}
+	});
+</script>
+<script type="text/javascript">
+	var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+	(function(){
+		var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+		s1.async=true;
+		s1.src='https://embed.tawk.to/{{ store_live_chat_code }}/default';
+		s1.charset='UTF-8';
+		s1.setAttribute('crossorigin','*');
+		s0.parentNode.insertBefore(s1,s0);
+	})();
+</script>
+<!--End of Tawk.to Script-->
+{% endif %}
+{% endif %}
+{% endif %}
+<script type="text/javascript">
+	if (localStorage.getItem('display') == 'list') {
+		$('#list-view').trigger('click');
+		} else {
+		$('#grid-view').trigger('click');
+	}
+</script>
+<script type="text/javascript"><!--
+function setCookie(key, value) {
+    var expires = new Date();
+    expires.setTime(expires.getTime() + (1 * 24 * 60 * 60 * 1000));
+    document.cookie = key + '=' + value + ';expires=' + expires.toUTCString();
+}
+$(document).ready(function () {
+  $("body").on("click", ".tt-quantity a", function () {
+    if($(this).attr("data-value") == 'tt-col-two') {
+      setCookie('display','large');
+    } else if($(this).attr("data-value") == 'tt-col-four') {
+      setCookie('display','small');
+    } else if($(this).attr("data-value") == 'tt-col-six') {
+      setCookie('display','verysmall');
+    } else if($(this).attr("data-value") == 'tt-col-one') {
+      setCookie('display','verylarge');
+    } else {
+      setCookie('display','medium');
+    }
+  });
+});
+//--></script> 
+ <script type="text/javascript" src="catalog/view/javascript/jquery/swiper/js/swiper.jquery.js"></script>
+<script>
+	$(window).load(function() {
+		if($('.pts-list-group11').parent().attr('id') == 'column-right' || $('.pts-list-group11').parent().hasClass('right_column')) {
+			$('.pts-list-group11').parent().addClass('pts-col-sm-3');
+		}
+		if ($(window).width() < 768) {
+			$('.pts-list-group11').parent().addClass('pts-column-right-sellerpanel');
+		}
+	});
+</script>
+<style>
+#tt-pageContent .pts-list-group11 {
+	display:none !important;
+}
+</style>
+{{ footer }}

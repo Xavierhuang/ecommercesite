@@ -1,0 +1,183 @@
+ :root {
+            --primary-color: #ed5442;
+            --emerald-500: #2dc787;
+            --yellow-500: #F59E0B;
+            --gray-400: #9CA3AF;
+        }
+
+        .hero-section {
+            display: flex;
+            min-height: 400px;
+        }
+
+        .hero-content {
+            background-color: var(--primary-color);
+            padding: 3rem;
+            flex: 1;
+            color: white;
+        }
+
+        .hero-content h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .hero-image {
+            flex: 1;
+            background-image: url('/api/placeholder/600/400');
+            background-size: cover;
+            background-position: center;
+        }
+
+        .membership-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 3rem 1rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 2rem;
+
+        }
+
+        .membership-card {
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-bottom: 7px solid var(--primary-color);
+            background-color: white;
+        }
+
+        .platinum {
+            /* border: 2px solid var(--emerald-500); */
+
+        }
+
+        .gold {
+            /* border: 2px solid var(--yellow-500); */
+        }
+
+        .silver {
+            /* border: 2px solid var(--gray-400); */
+        }
+
+        .normal {
+            /* border: 2px solid var(--gray-400); */
+        }
+
+        .card-header {
+            padding: 1.5rem;
+            background: white;
+        }
+
+        .card-header h2 {
+            margin: 0 0 0.5rem 0;
+            font-size: 1.5rem;
+            color: var(--primary-color);
+        }
+
+        .price {
+            color: #666;
+            margin-bottom: 0.5rem;
+        }
+
+        .free-month {
+            color: #666;
+            font-size: 0.875rem;
+        }
+
+        .free-month span {
+            color: var(--emerald-500);
+
+        }
+
+        .savings-badge {
+            background: var(--emerald-500);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 9999px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0.5rem 0;
+            font-size: 0.875rem;
+            width: 100%;
+            box-sizing: border-box;
+
+        }
+
+        .card-content {
+            padding: 1.5rem;
+            background-color: white;
+        }
+
+        .benefits-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .benefits-list li {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            color: #666;
+
+        }
+
+        .check-icon {
+            width: 20px;
+            height: 20px;
+            fill: var(--emerald-500);
+            flex-shrink: 0;
+            margin-top: 3px;
+        }
+
+        .services-section {
+            max-width: 1400px;
+            /* margin: 2rem auto; */
+            padding: .2rem;
+            text-align: center;
+            background-color: #fbe3c7;
+        }
+
+        .services-section.title {
+            color: var(--primary-color);
+            font-size: 2rem;
+        }
+
+        .services-card {
+            background: var(--emerald-500);
+            color: white;
+            padding: 2rem;
+            border-radius: 50px;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .services-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .services-list li {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .benefit-title {
+            color: var(--primary-color);
+            font-size: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .hero-section {
+                flex-direction: column;
+            }
+
+            .hero-image {
+                min-height: 300px;
+            }
+        }
