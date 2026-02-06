@@ -1,0 +1,316 @@
+{% if hyper_status %}
+{% if sellerareas %}
+<div class="text-center pts-hyperlocal-heading"> {{ hp_heading }}&nbsp<a class="launch-modal">{{ seller_area_namea }}</a></div>
+<div id ="overlay"class="wait ptsc-wait">
+<div id="wait" class="ptsc-sellerarea-loder"><img class="ptsc-sellerarea-loderimgcol"src='{{ hyperlocal_loder }}' alt="&nbsp Loading.." width="64" height="64" /><br></div>
+</div>
+<div id="sellerarea_modal" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <p class="text-primary ptsc-sellerarea-hyphead">{{ hp_heading }}</p>
+				{% if seller_area != '' %}
+                <button type="button" class="close pts-hyperlocal-close ptsc-sellerarea-martr" data-dismiss="modal">&times;</button>
+				{% else %}
+					{% if not area_status_check %}
+					     <button type="button" class="close pts-hyperlocal-close ptsc-sellerarea-martr" data-dismiss="modal">&times;</button>
+					{% endif %}
+				{% endif %}
+            </div>
+{% if hyperlocal_type == '0' %}
+            <div class="modal-body"> 
+                <form>
+                    <div class="pts-form-group">
+                      <select name="pts_customer_area" class="form-control pts_customer_area ptsc-quick-deliverb" id="select_sellerarea">
+					 {% if not check_seller_area %}
+					  {% if check_seller_area != '0' %}
+					  <option value="" class="pts-form-control" selected="selected">
+                           <span class="location">{{ text_hyper_selects }}</span>
+                       </option>
+					   {% endif %}
+					   {% endif %}
+                       {% for sellerarea in sellerareas %}
+					   {% if sellerarea.area_id ==  check_seller_area %}
+					   {% if check_seller_area != '' %}
+					    <option value="{{ sellerarea.area_id }}" class="pts-form-control" selected="selected">
+                           <span class="location">{{ sellerarea.area_name }}</span>
+                       </option>
+					   {% else %} 
+					   <option value="{{ sellerarea.area_id }}" class="pts-form-control">
+                           <span class="location">{{ sellerarea.area_name }}</span>
+                       </option>
+					   {% endif %}
+					   {% else %} 
+                       <option value="{{ sellerarea.area_id }}" class="pts-form-control">
+                           <span class="location">{{ sellerarea.area_name }}</span>
+                       </option>
+					   {% endif %} 
+                    {% endfor %}  
+              </select>     
+                    </div>    
+                </form>
+            </div>
+			 {% endif %} 
+{% if hyperlocal_type == '1' %}
+        <div class="modal-body"> 
+               
+				 <div class="row">
+				<div class="col-sm-10">
+					<input type="text" name="search_area" value="{{ search_area }}" placeholder="{{ text_search_area_placeholder }}" id="input-name" class="form-control pts-text-box-width" />
+					<input type="hidden" name="search_area_id" value=""  id="search_area_id" />
+					<input type="hidden" name="search_area_id_temp" value=""  id="search_area_id" />
+				</div>
+				<div class="col-sm-2">
+					<button id="btn_search_area" class="control-label pts-search-area-btn" >{{ text_seller_area_ok }}</button>
+				</div>
+				</div>
+				
+				<div class="row">
+				    <div id="search_alert" class="alert text-danger">
+					</div>
+				</div>
+				
+			
+        </div>
+ {% endif %} 
+ {% if hyperlocal_type == '2' %}
+        <div class="modal-body"> 
+               
+				 <div class="row">
+				<div class="col-sm-10">
+					<input type="text" name="search_text" value="{{ search_text }}" placeholder="{{ search_text }}" id="search_text" class="form-control pts-text-box-width" />
+					<input type="hidden" name="search_area_id" value=""  id="search_area_id" />
+					<input type="hidden" name="search_area_id_temp" value=""  id="search_area_id" />
+				</div>
+				<div class="col-sm-2">
+					<button id="btn_search_area" class="control-label pts-search-area-btn" >{{ text_seller_area_ok }}</button>
+				</div>
+				</div>
+				
+				<div class="row">
+				    <div id="search_alert" class="alert text-danger">
+					</div>
+				</div>
+        </div>
+ {% endif %} 
+			
+        </div>
+    </div>
+</div>
+<script>
+$(document).ready(function(){
+	$('#search_alert').css('display','none');
+	$('.launch-modal').click(function(){
+		$('#sellerarea_modal').modal({
+			backdrop: 'static'
+		});
+	}); 
+});
+$( ".pts_customer_area" ).change(function() {
+     var str = "";
+    $( "#select_sellerarea option:selected" ).each(function() {
+	  str =  $( this ).val();
+    });
+	if(str== ''){
+	     str = $('#pts_customer_area').val();
+		}
+	var hyper_type = 1;
+	hyperlocalAjax(str,hyper_type);
+});
+$(window).load(function() {
+ var check_seller_area = '{{ check_seller_area }}';
+	if(check_seller_area == ''){
+      $('.launch-modal').click();
+	}
+});
+{% if check_seller_area == '' %}
+$(document).ready(function(){	 
+	$('.pts-hyperlocal-close').click(function(){
+	  var hyper_type = 2;	
+	  var str = 0;
+	  hyperlocalAjax(str,hyper_type);
+	});
+});
+{% endif %} 
+function hyperlocalAjax(str,hyper_type){
+	$.ajax({
+				url: 'index.php?route=extension/account/purpletree_multivendor/sellerregister/sethyperlocalvalue&seller_area=' + str,
+				dataType: 'json',				
+				beforeSend:function(){
+				if( hyper_type == 1){
+				    $("#sellerarea_modal").modal('hide');
+				    $("#wait").css("display", "block");
+				    $("#overlay").css("display", "block");
+				   }
+					},				
+				success: function(json) {				    
+					if(json.status == 'success') {
+					  if( hyper_type == 1){
+						location.reload();
+					  }
+					}
+				},
+				error: function(json) {	
+					 window.location.replace("{{ base_url }}");
+				}
+				/* complete:function(){
+					$("#wait").css("display", "none");
+					} */
+			})
+}
+
+  $('input[name=\'search_area\']').autocomplete({
+    'source': function(request, response) {
+      $.ajax({
+        url: 'index.php?route=common/header/seachArea &search_area='+encodeURIComponent(request),
+        dataType: 'json',
+		 type: 'get',
+        success: function(json) {
+			if(json.length == 1){
+			  $('input[name=\'search_area_id_temp\']').val('');
+			}
+          response($.map(json, function(item) {
+            return {
+              label: item['area_name'],
+              value: item['area_id']
+            }
+          }));
+        }
+      });
+    },
+    'select': function(item) {
+      $('input[name=\'search_area\']').val(item['label']);
+      $('input[name=\'search_area_id\']').val(item['value']);
+	  $('input[name=\'search_area_id_temp\']').val(item['value']);
+	   $('#search_alert').empty();
+    }
+  });
+$( "#btn_search_area" ).click(function() {
+     var search_id = "";
+		search_id = $('input[name=\'search_area_id\']').val();
+		search_area_id_temp = $('input[name=\'search_area_id_temp\']').val();
+		search_area_name_temp = $('input[name=\'search_area\']').val();
+		
+		  $('#search_alert').empty();
+		  valid_data=true;
+		 if(search_area_id_temp == ""){
+		  $('#search_alert').css('display','block');
+			 html = '<i class="fa fa-exclamation-circle"></i><span> {{ text_message }}</span>';
+			valid_data = false;
+		 $('#search_alert').append(html);
+		} 
+		$.ajax({
+			url: 'index.php?route=extension/account/purpletree_multivendor/sellerregister/checkseller&seller_area=' + search_id,
+			dataType: 'json',	
+			type:'get',			
+			success: function(json) {	
+			console.log(json);
+			if(!json.status){
+			$('#search_alert').empty();
+			$('#search_alert').css('display','block');
+			  html = '<i class="fa fa-exclamation-circle"></i><span> {{ text_message }} </span>';
+			  //alert('No seller is available for this area.');
+			  valid_data = false;
+			$('#search_alert').append(html);
+			}
+			},
+			error: function(json) {	
+			
+			}
+		})
+		//alert('a');
+		setTimeout(function(){
+		if(valid_data){
+			var hyper_type = 1;
+			hyperlocalAjax(search_id,hyper_type);
+		}
+		},500);
+});
+
+
+  $('input[name=\'search_text\']').autocomplete({
+    'source': function(request, response) {
+      $.ajax({
+        url: 'index.php?route=common/header/seachText &search_area='+encodeURIComponent(request),
+        dataType: 'json',
+		 type: 'get',
+        success: function(json) {
+				$('input[name=\'search_area_id\']').val('');
+				$('input[name=\'search_area_id_temp\']').val('');
+			if(Object.keys(json).length){
+				console.log(json);
+				$('input[name=\'search_area_id\']').val(json.area_id);
+				$('input[name=\'search_area_id_temp\']').val(json.area_id);
+			}
+			
+        }
+      });
+    }
+  });
+$("#search_text").keyup(function(event) {
+    if (event.keyCode === 13) {
+        $("#btn_search_area").click();
+    }
+});
+
+</script>
+<style>
+.ptsc-wait {
+  position: fixed;
+  display: none;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0,0,0,0.5);
+  z-index: 80;
+  cursor: pointer;
+}
+.pts-hyperlocal-heading a {
+	color:#FFFFFF;
+	cursor:pointer;
+	text-decoration: underline;
+	}
+.pts-hyperlocal-heading {
+  font-size:15px;
+  padding:10px;
+  background-color:#2198C6;
+  color:#FFFFFF;
+  text-align:center;
+} 
+.ptsc-sellerarea-hyphead{
+   font-size:15px;
+}
+.ptsc-sellerarea-loder{
+   display:none;
+   width:69px;
+   height:89px;
+   position:absolute;
+   top:50%;
+   left:50%;
+   padding:2px; 
+   z-index: 99;
+}
+.ptsc-sellerarea-loderimgcol{
+   color:white;
+}
+.ptsc-sellerarea-martr{
+  margin-top:-40px !important; 
+  margin-right: -4px;
+}
+.ptsc-quick-deliverb{
+ width: 100%;
+}
+
+.pts-search-area-btn {
+    width: 58px;
+    height: 34px;
+}
+.pts-text-box-width {
+	width: inherit !important;
+}
+</style>
+{% endif %}
+{% endif %}

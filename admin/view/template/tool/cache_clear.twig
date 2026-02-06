@@ -1,0 +1,53 @@
+<?php echo $header; ?><?php echo $column_left; ?>
+<div id="content">
+  <div class="page-header">
+    <div class="container-fluid">
+      <h1><?php echo $heading_title; ?></h1>
+      <ul class="breadcrumb">
+        <?php foreach ($breadcrumbs as $breadcrumb) { ?>
+        <li><a href="<?php echo $breadcrumb['href']; ?>"><?php echo $breadcrumb['text']; ?></a></li>
+        <?php } ?>
+      </ul>
+    </div>
+  </div>
+  <div class="container-fluid">
+    <?php if ($success) { ?>
+    <div class="alert alert-success alert-dismissible"><i class="fa fa-check-circle"></i> <?php echo $success; ?>
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+    </div>
+    <?php } ?>
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title"><i class="fa fa-trash"></i> <?php echo $heading_title; ?></h3>
+      </div>
+      <div class="panel-body">
+        <div class="well">
+          <p>Clear all system caches including:</p>
+          <ul>
+            <li>Product cache</li>
+            <li>Category cache</li>
+            <li>Manufacturer cache</li>
+            <li>Image cache</li>
+            <li>File cache</li>
+            <li>SEO URL cache</li>
+          </ul>
+          <p><strong>Note:</strong> Clearing cache may temporarily slow down the site as caches rebuild.</p>
+        </div>
+        <div class="text-center">
+          <button type="button" id="button-clear" data-loading-text="Clearing..." class="btn btn-danger btn-lg">
+            <i class="fa fa-trash"></i> Clear All Cache
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script type="text/javascript">
+$('#button-clear').on('click', function() {
+  if (confirm('Are you sure you want to clear all cache?')) {
+    var $btn = $(this).button('loading');
+    location = '<?php echo $clear; ?>';
+  }
+});
+</script>
+<?php echo $footer; ?>

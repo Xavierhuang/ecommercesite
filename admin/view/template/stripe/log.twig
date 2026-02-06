@@ -1,0 +1,89 @@
+
+{{ header }}{{ column_left }}
+<div id="content">
+  <div class="page-header">
+    <div class="container-fluid">
+      <h1>{{ heading_title }}</h1>
+      <ul class="breadcrumb">
+        {% for breadcrumb in breadcrumbs %}
+        <li><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+  <div class="container-fluid">
+    {% if  error_warning %}
+    <div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i> {{ error_warning }}
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+    </div>
+    {% endif %}
+    {% if  success %}
+    <div class="alert alert-success"><i class="fa fa-check-circle"></i> {{ success }}
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+    </div>
+    {% endif %}
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title"><i class="fa fa-exclamation-triangle"></i> {{ text_list }}</h3>
+      </div>
+      <div class="panel-body">
+        <div class="well">
+          <div class="row">
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label class="control-label" for="input-date-start">{{ entry_date_start }}</label>
+                <div class="input-group date">
+                  <input type="text" name="filter_start_date" value="{{ filter_start_date }}" placeholder="{{ entry_date_start }}" data-date-format="YYYY-MM-DD" id="input-date-start" class="form-control" />
+                  <span class="input-group-btn">
+                  <button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button>
+                  </span></div>
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label class="control-label" for="input-date-end">{{ entry_date_end }}</label>
+                <div class="input-group date">
+                  <input type="text" name="filter_end_date" value="{{ filter_end_date }}" placeholder="{{ entry_date_end }}" data-date-format="YYYY-MM-DD" id="input-date-end" class="form-control" />
+                  <span class="input-group-btn">
+                  <button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button>
+                  </span></div>
+              </div>
+              <button type="button" id="button-filter" class="btn btn-primary pull-right"><i class="fa fa-filter"></i> {{ button_filter }}</button>
+              <button type="button" class="btn btn-warning pull-right" onclick="clearFilter()" style="margin-right: 10px;"><i class="fa fa-refresh"></i> {{ button_today }}</button>
+            </div>
+          </div>
+        </div>
+        <textarea wrap="off" rows="15" readonly class="form-control">{{ log }}</textarea>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+$('#button-filter').on('click', function() {
+	url = 'index.php?route=stripe/log&user_token={{ user_token }}';
+
+	var filter_start_date = $('input[name=\'filter_start_date\']').val();
+
+	if (filter_start_date) {
+		url += '&filter_start_date=' + encodeURIComponent(filter_start_date);
+	}
+
+  var filter_end_date = $('input[name=\'filter_end_date\']').val();
+
+	if (filter_end_date) {
+		url += '&filter_end_date=' + encodeURIComponent(filter_end_date);
+	}
+
+	location = url;
+});
+
+function clearFilter() {
+  location = '{{ clear }}';
+}
+</script>
+<script>
+$('.date').datetimepicker({
+	pickTime: false
+});
+</script>
+{{ footer }}

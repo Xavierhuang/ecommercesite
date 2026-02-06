@@ -1,0 +1,26 @@
+<div class="grid-items" style="padding:10px">
+  <div class="grid-item grid-item-bottom-1-3-1">
+    <div class="module module-products module-products-169 module-products-grid carousel-mode">
+		<div class="module-body">
+            <div class="module-item module-item-1 swiper-slide">
+                <h3 class="title module-title">{{ heading_title }}</h3>
+                   <div class="swiper swiper-has-pages" data-items-per-row="{&quot;c0&quot;:{&quot;0&quot;:{&quot;items&quot;:4,&quot;spacing&quot;:20},&quot;980&quot;:{&quot;items&quot;:3,&quot;spacing&quot;:20},&quot;760&quot;:{&quot;items&quot;:2,&quot;spacing&quot;:10}},&quot;c1&quot;:{&quot;0&quot;:{&quot;items&quot;:3,&quot;spacing&quot;:0}},&quot;c2&quot;:{&quot;0&quot;:{&quot;items&quot;:3,&quot;spacing&quot;:0}},&quot;sc&quot;:{&quot;0&quot;:{&quot;items&quot;:1,&quot;spacing&quot;:0}}}" data-options="{&quot;speed&quot;:500,&quot;autoplay&quot;:false,&quot;pauseOnHover&quot;:true,&quot;loop&quot;:false}">
+      <div class="swiper-container swiper-container-horizontal">
+        <div class="swiper-wrapper product-grid" style="transform: translate3d(0px, 0px, 0px);">
+
+			{% set display = j3.settings.get('globalProductView') %}
+          {% include "journal3/template/purpletree_journal3_theme_elements/product_module_card.twig" %}
+
+        </div>
+      <span class="swiper-notification" aria-live="assertive" aria-atomic="true"></span></div>
+      <div class="swiper-buttons">
+        <div class="swiper-button-prev swiper-button-disabled" tabindex="0" role="button" aria-label="Previous slide" aria-disabled="true"></div>
+        <div class="swiper-button-next" tabindex="0" role="button" aria-label="Next slide" aria-disabled="false"></div>
+      </div>
+      <div class="swiper-pagination swiper-pagination-clickable swiper-pagination-bullets"><span class="swiper-pagination-bullet swiper-pagination-bullet-active" tabindex="0" role="button" aria-label="Go to slide 1"></span><span class="swiper-pagination-bullet" tabindex="0" role="button" aria-label="Go to slide 2"></span></div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>

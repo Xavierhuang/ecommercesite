@@ -1,0 +1,191 @@
+{% if (registry.has('theme_options') == constant('true')) %} 
+  {% set id = random(5000) * random(50000) %}
+  {% set theme_options = registry.get('theme_options') %}
+  {% set config = registry.get('config') %}
+  <div class="box clearfix box-with-products {% if (theme_options.get( 'product_scroll_featured' ) != '0') %} {{ 'with-scroll' }} {% endif %}">
+    {% if (theme_options.get( 'product_scroll_featured' ) != '0') %} 
+    <!-- Carousel nav -->
+    <a class="next" href="#myCarousel{{ id }}" id="myCarousel{{ id }}_next"><span></span></a>
+    <a class="prev" href="#myCarousel{{ id }}" id="myCarousel{{ id }}_prev"><span></span></a>
+    {% endif %} 
+    
+    <div class="box-heading">{{ heading_title }}</div>
+    <div class="strip-line"></div>
+    <div class="clear"></div>
+    <div class="box-content products">
+      <div class="box-product">
+        <div id="myCarousel{{ id }}">
+          {% if (theme_options.get( 'product_scroll_featured' ) != '0') %} 
+            <div class="owl-carousel">
+                <div class="item">
+                  <div class="product-grid">
+                  {% for pts_blog in pts_blogs %}
+                      {% if loop.index > 1 %}</div></div><div class="item"><div class="product-grid">{% endif %}
+				<!-- featured blog -->	 
+					  
+                    {% set theme_options = registry.get('theme_options') %}
+{% set config = registry.get('config') %}
+
+<!-- Product -->
+<div class="product clearfix product-10" >
+	<div class="left">
+		{% if (pts_blog.thumb) %} 
+			<div class="image {% if (theme_options.get( 'product_image_effect' ) == '1') %} {{ 'image-swap-effect' }} {% endif %}">
+				
+				<a href="{{ pts_blog.href }}">
+				<!-- unused 
+					{% if (theme_options.get( 'product_image_effect' ) == '1') %}
+						{% set nthumb = result.store_logo|replace({' ': "%20"}) %}
+						{% set adres = constant('HTTP_SERVER') %}
+						{% set nthumb = nthumb|replace({adres: ""}) %}
+						{% set image_size = theme_options.getimagesize(nthumb) %}
+						{% set image_swap = theme_options.productImageSwap(41, image_size[0], image_size[1]) %}
+						{% if (image_swap != '') %} {{ '<img src="' ~ image_swap ~ '" alt="' ~ result.store_name ~ '" class="swap-image" />' }}{% endif %}
+					{% endif %} 
+				-->
+					{% if (theme_options.get( 'lazy_loading_images' ) != '0') %} 
+					<img src="{% if theme_options.get( 'lazy_loading_images_size') == 2 %}image/catalog/blank2.gif{% elseif theme_options.get( 'lazy_loading_images_size') == 3 %}image/catalog/blank3.gif{% else %}image/catalog/blank.gif{% endif %}" data-echo="{{ pts_blog.thumb }}" alt="{{ result.store_name }}" class="{% if (theme_options.get( 'product_image_effect' ) == '2') %} {{ 'zoom-image-effect' }} {% endif %}" />
+					{% else %} 
+					<img src="{{ pts_blog.thumb }}" alt="{{ pts_blog.title}}" class="{% if (theme_options.get( 'product_image_effect' ) == '2') %} {{ 'zoom-image-effect' }} {% endif %}" />
+					{% endif %} 
+				</a>
+			</div>
+		{% else %} 
+			<div class="image">
+				
+				<a href="{{ pts_blog.href }}"><img src="image/no_image.jpg" alt="{{ pts_blog.title}}" {% if (theme_options.get( 'product_image_effect' ) == '2') %} {{ 'class="zoom-image-effect"' }} {% endif %} /></a>
+			</div>
+		{% endif %} 
+	</div>
+	<div class="right">
+		<div class="name" ><a href="{{ pts_blog.href }}">{{ pts_blog.title}}</a>
+		<p style="margin-bottom:0px">{{ pts_blog.description }}</p>
+		</div>
+		<div class="name" style="padding-top:0px">
+		<a href="{{ pts_blog.href }}">{{ text_readmore }}</a>
+		</div>
+	</div> 
+</div> 
+					  
+				<!-- featured blog -->	  	  
+					  
+                    {% endfor %}
+                  </div>
+                </div>
+              </div>
+          {% else %}
+              <div class="active item">
+                <div class="product-grid">
+                  <div class="row">
+                  {% set class = 'col-6 col-md-4 col-lg-3' %} 
+                  {% if (itemsperpage == 6) %} {% set class = 'col-6 col-md-3 col-lg-2' %} {% endif %}
+                  {% if (itemsperpage == 5) %} {% set class = 'col-6 col-md-3 col-lg-25' %} {% endif %}
+                  {% if (itemsperpage == 3) %} {% set class = 'col-6 col-md-6 col-lg-4' %} {% endif %}
+                  {% if (itemsperpage == 2) %} {% set class = 'col-12 col-md-6' %} {% endif %}
+                   {% for result in store %} 
+                      <div class="{{ class }}">
+								<!-- featured blog -->	 
+					  
+                    {% set theme_options = registry.get('theme_options') %}
+{% set config = registry.get('config') %}
+
+<!-- Product -->
+<div class="product clearfix product-10" >
+	<div class="left">
+		{% if (pts_blog.thumb) %} 
+			<div class="image {% if (theme_options.get( 'product_image_effect' ) == '1') %} {{ 'image-swap-effect' }} {% endif %}">
+				
+				<a href="{{ pts_blog.href }}">
+				<!-- unused 
+					{% if (theme_options.get( 'product_image_effect' ) == '1') %}
+						{% set nthumb = result.store_logo|replace({' ': "%20"}) %}
+						{% set adres = constant('HTTP_SERVER') %}
+						{% set nthumb = nthumb|replace({adres: ""}) %}
+						{% set image_size = theme_options.getimagesize(nthumb) %}
+						{% set image_swap = theme_options.productImageSwap(41, image_size[0], image_size[1]) %}
+						{% if (image_swap != '') %} {{ '<img src="' ~ image_swap ~ '" alt="' ~ result.store_name ~ '" class="swap-image" />' }}{% endif %}
+					{% endif %} 
+				-->
+					{% if (theme_options.get( 'lazy_loading_images' ) != '0') %} 
+					<img src="{% if theme_options.get( 'lazy_loading_images_size') == 2 %}image/catalog/blank2.gif{% elseif theme_options.get( 'lazy_loading_images_size') == 3 %}image/catalog/blank3.gif{% else %}image/catalog/blank.gif{% endif %}" data-echo="{{ pts_blog.thumb }}" alt="{{ result.store_name }}" class="{% if (theme_options.get( 'product_image_effect' ) == '2') %} {{ 'zoom-image-effect' }} {% endif %}" />
+					{% else %} 
+					<img src="{{ pts_blog.thumb }}" alt="{{ pts_blog.title}}" class="{% if (theme_options.get( 'product_image_effect' ) == '2') %} {{ 'zoom-image-effect' }} {% endif %}" />
+					{% endif %} 
+				</a>
+			</div>
+		{% else %} 
+			<div class="image">
+				
+				<a href="{{ pts_blog.href }}"><img src="image/no_image.jpg" alt="{{ pts_blog.title}}" {% if (theme_options.get( 'product_image_effect' ) == '2') %} {{ 'class="zoom-image-effect"' }} {% endif %} /></a>
+			</div>
+		{% endif %} 
+	</div>
+	<div class="right">
+		<div class="name" ><a href="{{ pts_blog.href }}">{{ pts_blog.title}}</a>
+		<p style="margin-bottom:0px">{{ pts_blog.description }}</p>
+		</div>
+		<div class="name" style="padding-top:0px">
+		<a href="{{ pts_blog.href }}">{{ text_readmore }}</a>
+		</div>
+	</div> 
+</div> 
+					  
+				<!-- featured blog -->	
+                      </div>
+                    {% endfor %} 
+                  </div>
+                </div>
+              </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {% if (theme_options.get( 'product_scroll_featured' ) != '0') %} 
+  <script type="text/javascript">
+    $(document).ready(function() {
+      var owl{{ id }} = $(".box #myCarousel{{ id }} .owl-carousel");
+      
+      $("#myCarousel{{ id }}_next").click(function(){
+          owl{{ id }}.trigger('next.owl.carousel');
+          return false;
+        })
+      $("#myCarousel{{ id }}_prev").click(function(){
+          owl{{ id }}.trigger('prev.owl.carousel');
+          return false;
+      });
+
+    {% set itemsmobile = 2 %}
+    {% set itemstablet = 3 %}
+
+    {% if theme_options.get( 'product_per_pow' ) == 2 %}
+      {% set itemsmobile = 1 %}
+      {% set itemstablet = 2 %}
+    {% endif %}
+
+    {% set itemsperpage = 4 %} 
+    {% if (theme_options.get( 'product_per_pow' ) > 1) %}{% set itemsperpage = theme_options.get( 'product_per_pow' ) %}{% endif %} 
+   
+      owl{{ id }}.owlCarousel({
+        slideSpeed: 500,
+        margin: 30,
+        nav: false,
+        dots: false,
+        responsiveClass:true,
+        responsive:{
+            0:{
+                items:{{ itemsmobile }},
+            },
+            600:{
+                items:{{ itemstablet }},
+            },
+            1000:{
+                items:{{ itemsperpage }},
+            }
+        }
+       });
+    });
+  </script>
+  {% endif %}
+{% endif %}

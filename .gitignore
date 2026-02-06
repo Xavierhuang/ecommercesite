@@ -1,0 +1,7 @@
+# Storage (cache, logs - generated at runtime)
+storage/cache/
+storage/logs/
+storage/session/
+storage/upload/
+storage/modification/
+*.log

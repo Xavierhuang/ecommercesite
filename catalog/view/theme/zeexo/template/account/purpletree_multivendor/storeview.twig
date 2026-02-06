@@ -1,0 +1,951 @@
+{{ header }}
+<link href="catalog/view/javascript/font-awesome/css/font-awesome.css" rel="stylesheet" />
+<div class="pts-container container">
+	<ul class="pts-breadcrumb breadcrumb">
+		{% for breadcrumb in breadcrumbs %}
+		<li class="breadcrumb-item"><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+		{% endfor %}
+	</ul>
+	<style>
+	.page-title-wrapper{
+	       float: left !important;
+		   
+	} 
+	.right-block{
+	       position: relative;
+	}
+	</style>
+	{% if error_warning %}
+	<div class="alert pts-alert-danger"><i class="fa fa-exclamation-circle"></i> {{ error_warning }}</div>
+	{% endif %}
+	<div class="pts-row d-flex row">
+	{% if column_right %}
+    {% set class = 'pts-col-sm-9 col-sm-9' %}
+	{% set classproducts = 'pts-col-lg-4 pts-col-md-4' %}
+    {% else %}
+    {% set class = 'pts-col-sm-12 col-sm-12' %}
+	{% set classproducts = 'pts-col-lg-3 pts-col-md-3' %}
+    {% endif %}
+    <div id="pts-content" class="{{ class }}">{{ content_top }}
+	{% if storepage_layout %}
+			<div class="pts-row">
+				{% if store_video %}     
+				<div class="pts-col-sm-7" style="padding-top:15px">
+					<img src="{{ store_banner }}" style="margin-top: 1px; max-height:329px" class="img-responsive" alt="Image">
+				</div>
+				<div class="pts-col-sm-5 ptsvideo"> 
+					<iframe src="{{ store_video }}" style="height: 329px; width:100%"> </iframe>
+				</div>
+				{% else %} 
+				
+				<div class="pts-banner" style="padding-top:15px">
+					<img class="img-responsive" src="{{ store_banner }}" style="width:100%">
+				</div>
+				
+				{% endif %}
+			</div>				  
+			<div class="pts-row ptsrow2">
+				<div class="pts-col-sm-7 ptsinsidecol">
+					<div class="pts-well">
+						<div class="pts-col-sm-6">
+							<div class="pts-row" style="margin-bottom: 12px;">
+								<div class="pts-col-sm-6" >
+									<img src="{{ store_logo }}" class="img-responsive" alt="Image">
+								</div>
+								<div class="pts-col-sm-6">
+									<h4>{{ store_name }}</h4>
+									{% if seller_review_status %}
+									{% if store_rating.rating %}
+									<div class="rating pts-text-left">
+										{% for i in 1..5 %}
+										{% if store_rating.rating < i %} <span class="fa fa-stack star-seller"><i class="fa fa-star-o fa-stack-2x"></i></span> {% else %} <span class="fa fa-stack star-seller"><i class="fa fa-star fa-stack-2x" ></i><i class="fa fa-star-o fa-stack-2x"></i></span> {% endif %}
+										{% endfor %}({{ store_rating.rating|number_format(1) }})
+									</div>
+									{% else %}
+									{% for i in 1..5 %}
+									<span class="fa fa-stack star-seller"><i class="fa fa-star-o fa-stack-1x" ></i></span>
+									{% endfor %}({{ store_rating.rating|number_format(1) }})
+									{% endif %}
+									<div class="store-rating">
+										<a href="{{ store_review }}" target="_blank">{{ text_sellerreview }} ({{ store_rating['count'] }})</a>
+									</div>
+									{% endif %}
+								</div>
+							</div>
+							<div class="pts-row">
+								<div class="pts-col-sm-12" >
+									{% if (module_purpletree_multivendor_store_email) is not null %} <b>Email:</b>  {{ store_email }} {% endif %}<br>	
+									{% if (module_purpletree_multivendor_store_address) is not null %}<b>Address:</b>  {{ store_address }}
+									<p>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp{{ store_city }}{{ store_state }}<p/><p>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp{{ store_country }}{{ store_zipcode }}<p/>
+									{% endif %}<br>
+									{% if (module_purpletree_multivendor_store_phone) is not null %}<b>Tel. no:</b>  {{ store_phone }}{% endif %}<br>
+									{% if (module_purpletree_multivendor_store_social_link) is not null %}
+									<div class="social-icons d-flex justify-content-between">
+										{% if facebook_link != '' %}
+										<a target="_blank" href="{{ facebook_link }}"><i class="fa fa-facebook-square" style="margin-left:-3px"></i></a>
+										{% endif %}
+										{% if twitter_link != '' %}
+										<a target="_blank" href="{{ twitter_link  }}"><i class="fa fa-tumblr-square"></i></a>
+										{% endif %}
+										{% if google_link != '' %}
+										<a  target="_blank" href="{{ google_link }}"><i class="fa fa-google-plus-square"></i></a>
+										{% endif %}
+										{% if instagram_link != '' %}
+										<a  target="_blank" href="{{ instagram_link }}"><i class="fa fa-instagram"></i></a>
+										{% endif %}
+										{% if pinterest_link != '' %}
+										<a target="_blank" href="{{ pinterest_link }}"><i class="fa fa-pinterest-square"></i></a>
+										{% endif %}
+										{% if wesbsite_link != '' %}
+										<a target="_blank" href="{{ wesbsite_link }}"><i class="fa fa-globe"></i></a>
+										{% endif %}
+										{% if whatsapp_link != '' %}
+										<a target="_blank" href="{{ whatsapp_link }}"><i class="fa fa-whatsapp"></i></a>
+										{% endif %}
+									</div>
+									{% endif %}
+								</div>
+							</div>
+						</div>
+						<div class="pts-row">
+							<div class="pts-col-sm-6">
+								<b><h3 class="pts-text-right">{{ text_store_timings }}</h3></b>
+								<div class="pts-text-right">
+									<h4>{{ store_timings }}</h4>
+								</div>
+							</div>
+						</div>
+						
+					</div>
+					
+				</div>
+				
+				{% if google_map %}
+				<div class="pts-col-sm-5 ptsstoreimage"> 
+					<img src="{{ store_image }}" style="max-height:329px;" class="img-responsive" alt="Image">  
+				</div>
+				{% else %}
+				<div class="pts-col-sm-5 ptsstoreimage"> 
+					<img src="{{ store_image }}" style="max-height:329px; margin-bottom: 1%;" class="img-responsive" alt="Image">  
+				</div>
+				{% endif %}
+			</div>
+			<div class="pts-row">
+				{% if store_description %}  
+				<div class="pts-col-sm-7 ptsimage">
+					<div class="pts-well" id="ptsabout1">
+						{{ store_description }}								
+					</div>
+				</div>
+				{% endif %}
+				{% if google_map %}
+				<div class="pts-col-sm-5 ptsgooglemap"> 
+					<iframe src="{{ google_map }}" style="height: 329px; width:100%"> </iframe>
+				    {{ store_google_map }}
+				</div>
+				{% endif %}
+			</div>
+			{% if seller_products %}
+
+{% include 'zeexo/template/purpletree_zeexo_theme_elements/wrapper_top.twig' %}
+{% set theme_options = registry.get('theme_options') %}
+{% set config = registry.get('config') %} 				
+  <!-- Filter -->
+  <div id="mfilter-content-container">
+  <div class="product-filter d-flex align-items-center">
+    {% set column_left = theme_options.getModules('column_left') %}
+    {% set column_right = theme_options.getModules('column_right') %}
+    {% if column_left|length > 0 or column_right|length > 0 %}
+      <div class="open-filter d-flex d-md-none align-items-center"><i class="fas fa-filter"></i>{% if (theme_options.get( 'filter_text', config.get( 'config_language_id' ) ) != '') %} {{ theme_options.get( 'filter_text', config.get( 'config_language_id' ) ) }} {% else %} {{ 'Filter' }} {% endif %}</div>
+    {% endif %}
+    <div class="options {% if not (column_left|length > 0 or column_right|length > 0) %}align-left{% endif %} {% if (theme_options.get( 'product_per_pow2' ) == 2 or theme_options.get( 'grid_type' ) == 1) %}hide-grid2{% endif %}">      
+      <div class="button-group display" data-toggle="buttons-radio">
+        <button id="grid" {% if (theme_options.get('default_list_grid') == '1') %} {{ 'class="active"' }} {% endif %} rel="tooltip" title="Grid" onclick="display('grid');">
+          <i class="fas fa-th"></i>
+        </button>
+        <button id="grid2" rel="tooltip" title="Grid" onclick="display('grid2');">
+          <i class="fas fa-th-large"></i>
+        </button>
+        <button id="list" {% if (theme_options.get('default_list_grid') != '1') %} {{ 'class="active"' }} {% endif %} rel="tooltip" title="List" onclick="display('list');">
+          <i class="fas fa-bars"></i>
+        </button>
+      </div>
+    </div>
+    
+    <div class="sort d-flex align-items-center">
+      {{ text_sort }} 
+      <div class="select">
+        <select onchange="location = this.value;">
+          {% for sorts in sorts %} 
+          {% if (sorts['value'] == sort ~ '-' ~ order) %} 
+          <option value="{{ sorts['href'] }}" selected="selected">{{ sorts['text'] }}</option>
+          {% else %} 
+          <option value="{{ sorts['href'] }}">{{ sorts['text'] }}</option>
+          {% endif %} 
+          {% endfor %} 
+        </select>
+      </div>
+    </div>
+    
+    <div class="limit d-flex align-items-center">
+      {{ text_limit }} 
+      <div class="select">
+        <select onchange="location = this.value;">
+          {% for limits in limits %} 
+          {% if (limits['value'] == limit) %} 
+          <option value="{{ limits['href'] }}" selected="selected">{{ limits['text'] }}</option>
+          {% else %} 
+          <option value="{{ limits['href'] }}">{{ limits['text'] }}</option>
+          {% endif %} 
+          {% endfor %} 
+        </select>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Products list -->
+  {% if (theme_options.get('list_type') == '1') %}
+    <div class="product-list type-2 {% if (not (theme_options.get('default_list_grid') == '1')) %}active{% endif %}">
+      {% for product in seller_products %} 
+        {% set product_detail = theme_options.getDataProduct( product['product_id'] ) %} 
+        <div class="product-2 product-{{ product['product_id'] }}" id="product-{{ product['product_id'] }}">
+          <div class="d-flex">
+            <div class="image">
+              {% if (product['special'] and theme_options.get( 'display_text_sale' ) != '0') %} 
+                {% set text_sale = 'Sale' %}
+                {% if (theme_options.get( 'sale_text', config.get( 'config_language_id' ) ) != '') %}
+                  {% set text_sale = theme_options.get( 'sale_text', config.get( 'config_language_id' ) ) %}
+                {% endif %} 
+                {% if (theme_options.get( 'type_sale' ) == '1') %} 
+                  {% set product_detail = theme_options.getDataProduct( product['product_id'] ) %}
+                  {% set roznica_ceny = product_detail['price']-product_detail['special'] %}
+                  {% set procent = roznica_ceny*100/product_detail['price'] %} 
+                  <div class="sale">-{{ procent|round }}%</div>
+                {% else %} 
+                  <div class="sale">{{ text_sale }}</div>
+                {% endif %} 
+              {% elseif (theme_options.get( 'display_text_new' ) != '0' and theme_options.isLatestProduct( product['product_id'] )) %} 
+                 <div class="new">{% if (theme_options.get( 'new_text', config.get( 'config_language_id' ) ) != '') %} {{ theme_options.get( 'new_text', config.get( 'config_language_id' ) ) }} {% else %} {{ 'New' }} {% endif %}</div>
+              {% endif %} 
+
+              {% if (product['thumb']) %} 
+                {% if (theme_options.get( 'lazy_loading_images' ) != '0') %} 
+                <a href="{{ product['href'] }}"><img src="{% if theme_options.get( 'lazy_loading_images_size') == 2 %}image/catalog/blank2.gif{% elseif theme_options.get( 'lazy_loading_images_size') == 3 %}image/catalog/blank3.gif{% else %}image/catalog/blank.gif{% endif %}" data-echo="{{ product['thumb'] }}" alt="{{ product['name'] }}" /></a>
+                {% else %} 
+                <a href="{{ product['href'] }}"><img src="{{ product['thumb'] }}" alt="{{ product['name'] }}" /></a>
+                {% endif %} 
+              {% else %} 
+              <a href="{{ product['href'] }}"><img src="image/no_image.jpg" alt="{{ product['name'] }}" /></a>
+              {% endif %} 
+            </div>
+            <div class="center">
+              <div class="stock">{{ product_detail['stock'] }}</div>
+              <div class="name"><a href="{{ product['href'] }}">{{ product['name'] }}</a></div>
+		{% if multivendor_status %}
+			{% if show_seller_name %}
+				{% if product.seller_name %}
+					<p style="margin-top: 0px;"><a href="{{ product.seller_link }}">{{ text_seller_label }}&nbsp{{ product.seller_name }}</a></p>
+				{% endif %}
+			{% endif %}
+			{% if show_seller_address %}		  
+				{% if product.store_address %}		  
+					{% if product.google_map %}	
+						<a href="{{ product.google_map }}"><p style="margin-top: 0px;"><i class ="fa fa-map-marker" style = "color: #6aa5d1;"></i>&nbsp{{ product.store_address }}</p></a>
+					{% else %}
+						<p style="margin-top: 0px;"><i class ="fa fa-map-marker" style = "color: #6aa5d1;"></i>&nbsp{{ product.store_address }}</p>
+					{% endif %}
+				{% endif %}
+			{% endif %}
+		{% endif %}
+              <div class="rating-reviews clearfix">
+                <div class="rating"><i class="fa fa-star{% if (product['rating'] >= 1) %} {{ ' active' }} {% endif %}"></i><i class="fa fa-star{% if (product['rating'] >= 2) %} {{ ' active' }} {% endif %}"></i><i class="fa fa-star{% if (product['rating'] >= 3) %} {{ ' active' }} {% endif %}"></i><i class="fa fa-star{% if (product['rating'] >= 4) %} {{ ' active' }} {% endif %}"></i><i class="fa fa-star{% if (product['rating'] >= 5) %} {{ ' active' }} {% endif %}"></i></div>
+              </div>
+              <div class="price">
+                {% if (not product['special']) %} 
+                {{ product['price'] }} 
+                {% else %} 
+                <span class="price-old">{{ product['price'] }}</span> <span class="price-new">{{ product['special'] }}</span>
+                {% endif %} 
+              </div>
+              <div class="d-flex">
+                <div class="left">{{ product_detail['text_model'] }}<br>{{ product_detail['text_stock'] }}</div>
+                <div class="right">{{ product_detail['model'] }}<br>{{ product_detail['stock'] }}</div>
+              </div>
+              <div class="description">{{ product.description }}</div>
+            </div>
+            <div class="right align-self-center">
+              <div class="add-to-cart">
+                   {% set enquiry = constant('false') %} {% if (config.get( 'product_blocks_module' ) != '') %} {% set enquiry = theme_options.productIsEnquiry(product['product_id']) %} {% endif %}
+             {% if (enquiry is iterable) %} 
+                   <a href="javascript:openPopup('{{ enquiry['popup_module'] }}', '{{ product['product_id'] }}')" class="button button-enquiry">
+                        {% if (enquiry['icon'] != '' and enquiry['icon_position'] == 'left') %} {{ '<img src="image/' ~ enquiry['icon']~ '" align="left" class="icon-enquiry" alt="Icon">' }} {% endif %} 
+                        <span class="text-enquiry">{{ enquiry['block_name'] }}</span>
+                        {% if (enquiry['icon'] != '' and enquiry['icon_position'] == 'right') %} {{ '<img src="image/' ~ enquiry['icon']~ '" align="right" class="icon-enquiry" alt="Icon">' }} {% endif %} 
+                   </a>
+                   {% else %} 
+                   <a onclick="cart.add('{{ product['product_id'] }}');" class="button">{{ button_cart }}</a>
+                   {% endif %} 
+              </div>
+              
+              <ul class="action">
+                <li><a onclick="compare.add('{{ product['product_id'] }}');"><span><i class="fas fa-exchange-alt"></i></span>{% if (theme_options.get( 'add_to_compare_text', config.get( 'config_language_id' ) ) != '') %} {{ theme_options.get( 'add_to_compare_text', config.get( 'config_language_id' ) ) }} {% else %} {{ 'Add to compare' }} {% endif %}</a></li>
+                <li><a onclick="wishlist.add('{{ product['product_id'] }}');"><span><i class="fas fa-heart"></i></span>{% if (theme_options.get( 'add_to_wishlist_text', config.get( 'config_language_id' ) ) != '') %} {{ theme_options.get( 'add_to_wishlist_text', config.get( 'config_language_id' ) ) }} {% else %} {{ 'Add to wishlist' }} {% endif %}</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="product-list {% if (not (theme_options.get('default_list_grid') == '1')) %}active{% endif %}">
+      {% for product in seller_products %} 
+        <div class="product product-{{ product['product_id'] }}" id="product-{{ product['product_id'] }}">
+          <div class="d-flex align-items-center">
+            <div class="left">
+              <div class="image">
+                {% if (product['special'] and theme_options.get( 'display_text_sale' ) != '0') %} 
+                  {% set text_sale = 'Sale' %}
+                  {% if (theme_options.get( 'sale_text', config.get( 'config_language_id' ) ) != '') %}
+                    {% set text_sale = theme_options.get( 'sale_text', config.get( 'config_language_id' ) ) %}
+                  {% endif %} 
+                  {% if (theme_options.get( 'type_sale' ) == '1') %} 
+                    {% set product_detail = theme_options.getDataProduct( product['product_id'] ) %}
+                    {% set roznica_ceny = product_detail['price']-product_detail['special'] %}
+                    {% set procent = roznica_ceny*100/product_detail['price'] %} 
+                    <div class="sale">-{{ procent|round }}%</div>
+                  {% else %} 
+                    <div class="sale">{{ text_sale }}</div>
+                  {% endif %} 
+                {% elseif (theme_options.get( 'display_text_new' ) != '0' and theme_options.isLatestProduct( product['product_id'] )) %} 
+                   <div class="new">{% if (theme_options.get( 'new_text', config.get( 'config_language_id' ) ) != '') %} {{ theme_options.get( 'new_text', config.get( 'config_language_id' ) ) }} {% else %} {{ 'New' }} {% endif %}</div>
+                {% endif %} 
+
+                {% if (product['thumb']) %} 
+                  {% if (theme_options.get( 'lazy_loading_images' ) != '0') %} 
+                  <a href="{{ product['href'] }}"><img src="{% if theme_options.get( 'lazy_loading_images_size') == 2 %}image/catalog/blank2.gif{% elseif theme_options.get( 'lazy_loading_images_size') == 3 %}image/catalog/blank3.gif{% else %}image/catalog/blank.gif{% endif %}" data-echo="{{ product['thumb'] }}" alt="{{ product['name'] }}" /></a>
+                  {% else %} 
+                  <a href="{{ product['href'] }}"><img src="{{ product['thumb'] }}" alt="{{ product['name'] }}" /></a>
+                  {% endif %} 
+                {% else %} 
+                <a href="{{ product['href'] }}"><img src="image/no_image.jpg" alt="{{ product['name'] }}" /></a>
+                {% endif %} 
+              </div>
+            </div>
+            <div class="right">
+              {% set product_detail = theme_options.getDataProduct( product['product_id'] ) %} 
+              <div class="brand">{{ product_detail['manufacturer'] }}</div>
+              <div class="name"><a href="{{ product['href'] }}">{{ product['name'] }}</a></div>
+		{% if multivendor_status %}
+			{% if show_seller_name %}
+				{% if product.seller_name %}
+					<p style="margin-top: 0px;"><a href="{{ product.seller_link }}">{{ text_seller_label }}&nbsp{{ product.seller_name }}</a></p>
+				{% endif %}
+			{% endif %}
+			{% if show_seller_address %}		  
+				{% if product.store_address %}		  
+					{% if product.google_map %}	
+						<a href="{{ product.google_map }}"><p style="margin-top: 0px;"><i class ="fa fa-map-marker" style = "color: #6aa5d1;"></i>&nbsp{{ product.store_address }}</p></a>
+					{% else %}
+						<p style="margin-top: 0px;"><i class ="fa fa-map-marker" style = "color: #6aa5d1;"></i>&nbsp{{ product.store_address }}</p>
+					{% endif %}
+				{% endif %}
+			{% endif %}
+		{% endif %}
+              <div class="rating-reviews clearfix">
+                <div class="rating"><i class="fa fa-star{% if (product['rating'] >= 1) %} {{ ' active' }} {% endif %}"></i><i class="fa fa-star{% if (product['rating'] >= 2) %} {{ ' active' }} {% endif %}"></i><i class="fa fa-star{% if (product['rating'] >= 3) %} {{ ' active' }} {% endif %}"></i><i class="fa fa-star{% if (product['rating'] >= 4) %} {{ ' active' }} {% endif %}"></i><i class="fa fa-star{% if (product['rating'] >= 5) %} {{ ' active' }} {% endif %}"></i></div>
+              </div>
+              <div class="price">
+                {% if (not product['special']) %} 
+                {{ product['price'] }} 
+                {% else %} 
+                <span class="price-old">{{ product['price'] }}</span> <span class="price-new">{{ product['special'] }}</span>
+                {% endif %} 
+              </div>
+              <div class="add-to-cart">
+                   {% set enquiry = constant('false') %} {% if (config.get( 'product_blocks_module' ) != '') %} {% set enquiry = theme_options.productIsEnquiry(product['product_id']) %} {% endif %}
+             {% if (enquiry is iterable) %} 
+                   <a href="javascript:openPopup('{{ enquiry['popup_module'] }}', '{{ product['product_id'] }}')" class="button button-enquiry">
+                        {% if (enquiry['icon'] != '' and enquiry['icon_position'] == 'left') %} {{ '<img src="image/' ~ enquiry['icon']~ '" align="left" class="icon-enquiry" alt="Icon">' }} {% endif %} 
+                        <span class="text-enquiry">{{ enquiry['block_name'] }}</span>
+                        {% if (enquiry['icon'] != '' and enquiry['icon_position'] == 'right') %} {{ '<img src="image/' ~ enquiry['icon']~ '" align="right" class="icon-enquiry" alt="Icon">' }} {% endif %} 
+                   </a>
+                   {% else %} 
+                   <a onclick="cart.add('{{ product['product_id'] }}');" class="button">{{ button_cart }}</a>
+                   {% endif %} 
+              </div>
+              
+              <ul class="action">
+                <li><a onclick="compare.add('{{ product['product_id'] }}');"><span><i class="fas fa-exchange-alt"></i></span>{% if (theme_options.get( 'add_to_compare_text', config.get( 'config_language_id' ) ) != '') %} {{ theme_options.get( 'add_to_compare_text', config.get( 'config_language_id' ) ) }} {% else %} {{ 'Add to compare' }} {% endif %}</a></li>
+                <li><a onclick="wishlist.add('{{ product['product_id'] }}');"><span><i class="fas fa-heart"></i></span>{% if (theme_options.get( 'add_to_wishlist_text', config.get( 'config_language_id' ) ) != '') %} {{ theme_options.get( 'add_to_wishlist_text', config.get( 'config_language_id' ) ) }} {% else %} {{ 'Add to wishlist' }} {% endif %}</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      {% endfor %} 
+    </div> 
+  {% endif %}
+  
+  <!-- Products grid -->
+  
+ {% set class = 'col-6 col-md-4 col-lg-3' %} 
+ {% if (theme_options.get( 'product_per_pow2' ) == 6) %} {% set class = 'col-6 col-md-3 col-lg-2' %} {% endif %}
+ {% if (theme_options.get( 'product_per_pow2' ) == 5) %} {% set class = 'col-6 col-md-3 col-lg-25' %} {% endif %}
+ {% if (theme_options.get( 'product_per_pow2' ) == 3) %} {% set class = 'col-6 col-md-6 col-lg-4' %} {% endif %}
+ {% if (theme_options.get( 'product_per_pow2' ) == 2) %} {% set class = 'col-12 col-md-6' %} {% endif %}
+  
+  {% if (theme_options.get('grid_type') == '1') %}
+    <div class="product-grid type-2 {% if (theme_options.get('default_list_grid') == '1') %}active{% endif %}">
+      <div class="row2">
+        {% for product in seller_products %}
+          <div class="col-12 col-md-6">
+            {% include 'zeexo/template/purpletree_zeexo_theme_elements/product_2.twig' %}
+          </div>
+        {% endfor %}
+      </div>  
+    </div>
+  {% else %}
+    <div class="product-grid {% if (theme_options.get('default_list_grid') == '1') %}active{% endif %}">
+      <div class="row">
+        {% for product in seller_products %}
+          <div class="{{ class }}">
+              {% include 'zeexo/template/purpletree_zeexo_theme_elements/product_1.twig' %}
+          </div>
+          {% set block_between_products = theme_options.getModules('block_between_products') %}
+          {% if (theme_options.get( 'product_per_pow2' ) == 2 and block_between_products|length > 0 and loop.index == 2) or (theme_options.get( 'product_per_pow2' ) == 3 and block_between_products|length > 0 and loop.index == 3) or (theme_options.get( 'product_per_pow2' ) == 4 and block_between_products|length > 0 and loop.index == 4) or (theme_options.get( 'product_per_pow2' ) == 5 and block_between_products|length > 0 and loop.index == 5) or (theme_options.get( 'product_per_pow2' ) == 6 and block_between_products|length > 0 and loop.index == 6) %}
+            <div class="col-12" id="category-banner">
+              {% for module in block_between_products %} 
+                {{ module }}
+              {% endfor %}
+            </div>
+          {% endif %}
+        {% endfor %} 
+      </div>
+    </div>
+	
+  {% endif %}
+    <div class="row pagination-results">
+    <div class="col-md-6 text-left">{{ pagination }}</div>
+    <div class="col-md-6 text-right">{{ results }}</div>
+  </div>
+  </div>
+  
+  
+  
+			{% else %}
+			<div class="pts-text-center"><h3>{{ text_no_results }}</h3></div>
+			{% endif %}
+	
+{% else %}
+		<h1 style="margin-top:0px !important">{{ store_name }}</h1>
+		<div class="pts-banner">
+			<img class="img-responsive" src="{{ store_banner }}" style="width:100%">
+		</div>
+		{% if not check_category_bar %}
+		<div class="pts-col-md-12 p-0 pts-form-group">
+			<div class="store-navbar">
+				<li>
+					<a href="{{ allCategory }}">{{ text_all }}</a>
+				</li>
+				{% if storeMenu %}
+				{% for key,value in storeMenu %}
+				<li>
+					<a href="{{ value.url }}">{{ value.name }}</a>
+				</li>
+				{% endfor %}
+				{% endif %}
+			</div>
+		</div>
+		{% endif %}
+		<div class="pts-row" style="margin-left:0">
+			<div class="store_top_div clearfix">
+				<div class="pts-col-sm-3  seller_pannel_store">
+					<div class="store_logo pts-text-center">
+						<img class="img-responsive m-auto" src="{{ store_logo }}">
+					</div>
+					{% if (module_purpletree_multivendor_seller_name) is not null %}
+					<div class="seller-name">
+						<h3 style="margin-top:10px;">{{ seller_name }}</h3>
+					</div>
+					{% endif %}
+					{% if seller_review_status %}
+					{% if store_rating.rating %}
+					<div class="rating pts-text-left">
+						{% for i in 1..5 %}
+						{% if store_rating.rating < i %} <span class="fa fa-stack star-seller"><i class="fa fa-star-o fa-stack-2x"></i></span> {% else %} <span class="fa fa-stack star-seller"><i class="fa fa-star fa-stack-2x" ></i><i class="fa fa-star-o fa-stack-2x"></i></span> {% endif %}
+						{% endfor %}({{ store_rating.rating|number_format(1) }})
+					</div>
+					{% else %}
+					{% for i in 1..5 %}
+					<span class="fa fa-stack star-seller"><i class="fa fa-star-o fa-stack-1x" ></i></span>
+					{% endfor %}({{ store_rating.rating|number_format(1) }})
+					{% endif %}
+					<div class="store-rating">
+						<a href="{{ store_review }}" target="_blank">{{ text_sellerreview }} ({{ store_rating['count'] }})</a>
+					</div>
+					{% endif %}
+					{% if (module_purpletree_multivendor_store_social_link) is not null %}
+					<div class="social-icons d-flex justify-content-between">
+						{% if facebook_link != '' %}
+						<a target="_blank" href="{{ facebook_link }}"><i class="fa fa-facebook-square" style="margin-left:-3px"></i></a> {% endif %}
+						{% if twitter_link != '' %}
+						<a target="_blank" href="{{ twitter_link  }}"><i class="fa fa-tumblr-square"></i></a>
+						{% endif %}
+						{% if google_link != '' %}
+						<a  target="_blank" href="{{ google_link }}"><i class="fa fa-google-plus-square"></i></a>
+						{% endif %}
+						{% if instagram_link != '' %}
+						<a  target="_blank" href="{{ instagram_link }}"><i class="fa fa-instagram"></i></a>
+						{% endif %}
+						{% if pinterest_link != '' %}
+						<a target="_blank" href="{{ pinterest_link }}"><i class="fa fa-pinterest-square"></i></a>
+						{% endif %}
+						{% if wesbsite_link != '' %}
+						<a target="_blank" href="{{ wesbsite_link }}"><i class="fa fa-globe"></i></a>
+						{% endif %}
+						
+						{% if whatsapp_link != '' %}
+						<a target="_blank" href="{{ whatsapp_link }}"><i class="fa fa-whatsapp"></i></a>
+						{% endif %}
+					</div>
+					{% endif %}
+					<div class="seller-info" style="">
+						<div class="contact-info">
+							{% if (module_purpletree_multivendor_store_email) is not null %}
+							<div class="seller-email">
+								<div><i class="fa fa-envelope" aria-hidden="true"></i> {{ store_email }}</div>
+							</div>
+							{% endif %}
+							{% if (module_purpletree_multivendor_store_phone) is not null %}
+							<div class="seller-phone">
+								<div><i class="fa fa-phone" aria-hidden="true"></i> {{ store_phone }}</div>
+							</div>
+							{% endif %}
+							{% if (module_purpletree_multivendor_store_address) is not null %}
+							<div class="seller-address">
+								<div><i class="fa fa-home" aria-hidden="true"></i>{{ store_address }}<p>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp{{ store_city }}{{ store_state }}<p/><p>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp{{ store_country }}{{ store_zipcode }}<p/></div>
+							</div>
+							{% endif %}
+						</div>
+						<div class="seller-about">
+							<div>
+								<a href="{{ store_about }}" target="_blank">{{ text_aboutstore }}
+									<i class="fa fa-angle-right pts-r"></i>
+								</a>
+							</div>
+						</div>
+						
+						<div class="seller-shipping">
+							<div>
+								<a href="{{ store_shipping_policy }}" target="_blank">{{ text_shippingpolicy }}
+									<i class="fa fa-angle-right pts-r"></i>
+								</a>
+							</div>
+						</div>
+						<div class="seller-return">
+							<div>
+								<a href="{{ store_return_policy }}" target="_blank">{{ text_returnpolicy }}
+									<i class="fa fa-angle-right pts-r"></i>
+								</a>
+							</div>
+						</div>								
+					</div>
+					<div class="seller-return pts-text-center">
+						<div class=" contact_seller_link">
+							<a href="{{ seller_contact }}" class="contact_seller" target="_blank"><img src="image/catalog/contact_seller.png" width="20px" height="20px" style="color:#fff"> {{text_sellercontact }}</a>
+						</div>
+					</div>
+					<div class="seller-name">
+						<h3>{{products_categories}}</h3>
+					</div>
+					<div class="pts-list-group" >
+						{% if categories %}
+						
+						{%for category in categories %}
+						<a href="{{category['href']}}" class="pts-list-group-item {{category['active']}}">{{ category['name'] }}</a>
+						{% if category.subcategories %}
+						{%for subcat in category.subcategories %}
+						<a href="{{subcat['href']}}" class="pts-list-group-item {{subcat['active']}}"><span>&nbsp;&nbsp;-&nbsp;</span>{{ subcat['name'] }}</a>
+						{% endfor %}
+						{% endif %}
+						{% endfor %}
+						{% endif %}
+					</div>
+				</div>
+				<div class="pts-col-sm-9">
+					<div class="pts-col-md-12 pts-form-group">
+						{{ store_description }}
+					</div>
+					{% if seller_products %} 
+				
+
+{% include 'zeexo/template/purpletree_zeexo_theme_elements/wrapper_top.twig' %}
+{% set theme_options = registry.get('theme_options') %}
+{% set config = registry.get('config') %} 				
+  <!-- Filter -->
+  <div id="mfilter-content-container">
+  <div class="product-filter d-flex align-items-center">
+    {% set column_left = theme_options.getModules('column_left') %}
+    {% set column_right = theme_options.getModules('column_right') %}
+    {% if column_left|length > 0 or column_right|length > 0 %}
+      <div class="open-filter d-flex d-md-none align-items-center"><i class="fas fa-filter"></i>{% if (theme_options.get( 'filter_text', config.get( 'config_language_id' ) ) != '') %} {{ theme_options.get( 'filter_text', config.get( 'config_language_id' ) ) }} {% else %} {{ 'Filter' }} {% endif %}</div>
+    {% endif %}
+    <div class="options {% if not (column_left|length > 0 or column_right|length > 0) %}align-left{% endif %} {% if (theme_options.get( 'product_per_pow2' ) == 2 or theme_options.get( 'grid_type' ) == 1) %}hide-grid2{% endif %}">      
+      <div class="button-group display" data-toggle="buttons-radio">
+        <button id="grid" {% if (theme_options.get('default_list_grid') == '1') %} {{ 'class="active"' }} {% endif %} rel="tooltip" title="Grid" onclick="display('grid');">
+          <i class="fas fa-th"></i>
+        </button>
+        <button id="grid2" rel="tooltip" title="Grid" onclick="display('grid2');">
+          <i class="fas fa-th-large"></i>
+        </button>
+        <button id="list" {% if (theme_options.get('default_list_grid') != '1') %} {{ 'class="active"' }} {% endif %} rel="tooltip" title="List" onclick="display('list');">
+          <i class="fas fa-bars"></i>
+        </button>
+      </div>
+    </div>
+    
+    <div class="sort d-flex align-items-center">
+      {{ text_sort }} 
+      <div class="select">
+        <select onchange="location = this.value;">
+          {% for sorts in sorts %} 
+          {% if (sorts['value'] == sort ~ '-' ~ order) %} 
+          <option value="{{ sorts['href'] }}" selected="selected">{{ sorts['text'] }}</option>
+          {% else %} 
+          <option value="{{ sorts['href'] }}">{{ sorts['text'] }}</option>
+          {% endif %} 
+          {% endfor %} 
+        </select>
+      </div>
+    </div>
+    
+    <div class="limit d-flex align-items-center">
+      {{ text_limit }} 
+      <div class="select">
+        <select onchange="location = this.value;">
+          {% for limits in limits %} 
+          {% if (limits['value'] == limit) %} 
+          <option value="{{ limits['href'] }}" selected="selected">{{ limits['text'] }}</option>
+          {% else %} 
+          <option value="{{ limits['href'] }}">{{ limits['text'] }}</option>
+          {% endif %} 
+          {% endfor %} 
+        </select>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Products list -->
+  {% if (theme_options.get('list_type') == '1') %}
+    <div class="product-list type-2 {% if (not (theme_options.get('default_list_grid') == '1')) %}active{% endif %}">
+      {% for product in seller_products %} 
+        {% set product_detail = theme_options.getDataProduct( product['product_id'] ) %} 
+        <div class="product-2 product-{{ product['product_id'] }}" id="product-{{ product['product_id'] }}">
+          <div class="d-flex">
+            <div class="image">
+              {% if (product['special'] and theme_options.get( 'display_text_sale' ) != '0') %} 
+                {% set text_sale = 'Sale' %}
+                {% if (theme_options.get( 'sale_text', config.get( 'config_language_id' ) ) != '') %}
+                  {% set text_sale = theme_options.get( 'sale_text', config.get( 'config_language_id' ) ) %}
+                {% endif %} 
+                {% if (theme_options.get( 'type_sale' ) == '1') %} 
+                  {% set product_detail = theme_options.getDataProduct( product['product_id'] ) %}
+                  {% set roznica_ceny = product_detail['price']-product_detail['special'] %}
+                  {% set procent = roznica_ceny*100/product_detail['price'] %} 
+                  <div class="sale">-{{ procent|round }}%</div>
+                {% else %} 
+                  <div class="sale">{{ text_sale }}</div>
+                {% endif %} 
+              {% elseif (theme_options.get( 'display_text_new' ) != '0' and theme_options.isLatestProduct( product['product_id'] )) %} 
+                 <div class="new">{% if (theme_options.get( 'new_text', config.get( 'config_language_id' ) ) != '') %} {{ theme_options.get( 'new_text', config.get( 'config_language_id' ) ) }} {% else %} {{ 'New' }} {% endif %}</div>
+              {% endif %} 
+
+              {% if (product['thumb']) %} 
+                {% if (theme_options.get( 'lazy_loading_images' ) != '0') %} 
+                <a href="{{ product['href'] }}"><img src="{% if theme_options.get( 'lazy_loading_images_size') == 2 %}image/catalog/blank2.gif{% elseif theme_options.get( 'lazy_loading_images_size') == 3 %}image/catalog/blank3.gif{% else %}image/catalog/blank.gif{% endif %}" data-echo="{{ product['thumb'] }}" alt="{{ product['name'] }}" /></a>
+                {% else %} 
+                <a href="{{ product['href'] }}"><img src="{{ product['thumb'] }}" alt="{{ product['name'] }}" /></a>
+                {% endif %} 
+              {% else %} 
+              <a href="{{ product['href'] }}"><img src="image/no_image.jpg" alt="{{ product['name'] }}" /></a>
+              {% endif %} 
+            </div>
+            <div class="center">
+              <div class="stock">{{ product_detail['stock'] }}</div>
+              <div class="name"><a href="{{ product['href'] }}">{{ product['name'] }}</a></div>
+		{% if multivendor_status %}
+			{% if show_seller_name %}
+				{% if product.seller_name %}
+					<p style="margin-top: 0px;"><a href="{{ product.seller_link }}">{{ text_seller_label }}&nbsp{{ product.seller_name }}</a></p>
+				{% endif %}
+			{% endif %}
+			{% if show_seller_address %}		  
+				{% if product.store_address %}		  
+					{% if product.google_map %}	
+						<a href="{{ product.google_map }}"><p style="margin-top: 0px;"><i class ="fa fa-map-marker" style = "color: #6aa5d1;"></i>&nbsp{{ product.store_address }}</p></a>
+					{% else %}
+						<p style="margin-top: 0px;"><i class ="fa fa-map-marker" style = "color: #6aa5d1;"></i>&nbsp{{ product.store_address }}</p>
+					{% endif %}
+				{% endif %}
+			{% endif %}
+		{% endif %}
+              <div class="rating-reviews clearfix">
+                <div class="rating"><i class="fa fa-star{% if (product['rating'] >= 1) %} {{ ' active' }} {% endif %}"></i><i class="fa fa-star{% if (product['rating'] >= 2) %} {{ ' active' }} {% endif %}"></i><i class="fa fa-star{% if (product['rating'] >= 3) %} {{ ' active' }} {% endif %}"></i><i class="fa fa-star{% if (product['rating'] >= 4) %} {{ ' active' }} {% endif %}"></i><i class="fa fa-star{% if (product['rating'] >= 5) %} {{ ' active' }} {% endif %}"></i></div>
+              </div>
+              <div class="price">
+                {% if (not product['special']) %} 
+                {{ product['price'] }} 
+                {% else %} 
+                <span class="price-old">{{ product['price'] }}</span> <span class="price-new">{{ product['special'] }}</span>
+                {% endif %} 
+              </div>
+              <div class="d-flex">
+                <div class="left">{{ product_detail['text_model'] }}<br>{{ product_detail['text_stock'] }}</div>
+                <div class="right">{{ product_detail['model'] }}<br>{{ product_detail['stock'] }}</div>
+              </div>
+              <div class="description">{{ product.description }}</div>
+            </div>
+            <div class="right align-self-center">
+              <div class="add-to-cart">
+                   {% set enquiry = constant('false') %} {% if (config.get( 'product_blocks_module' ) != '') %} {% set enquiry = theme_options.productIsEnquiry(product['product_id']) %} {% endif %}
+             {% if (enquiry is iterable) %} 
+                   <a href="javascript:openPopup('{{ enquiry['popup_module'] }}', '{{ product['product_id'] }}')" class="button button-enquiry">
+                        {% if (enquiry['icon'] != '' and enquiry['icon_position'] == 'left') %} {{ '<img src="image/' ~ enquiry['icon']~ '" align="left" class="icon-enquiry" alt="Icon">' }} {% endif %} 
+                        <span class="text-enquiry">{{ enquiry['block_name'] }}</span>
+                        {% if (enquiry['icon'] != '' and enquiry['icon_position'] == 'right') %} {{ '<img src="image/' ~ enquiry['icon']~ '" align="right" class="icon-enquiry" alt="Icon">' }} {% endif %} 
+                   </a>
+                   {% else %} 
+                   <a onclick="cart.add('{{ product['product_id'] }}');" class="button">{{ button_cart }}</a>
+                   {% endif %} 
+              </div>
+              
+              <ul class="action">
+                <li><a onclick="compare.add('{{ product['product_id'] }}');"><span><i class="fas fa-exchange-alt"></i></span>{% if (theme_options.get( 'add_to_compare_text', config.get( 'config_language_id' ) ) != '') %} {{ theme_options.get( 'add_to_compare_text', config.get( 'config_language_id' ) ) }} {% else %} {{ 'Add to compare' }} {% endif %}</a></li>
+                <li><a onclick="wishlist.add('{{ product['product_id'] }}');"><span><i class="fas fa-heart"></i></span>{% if (theme_options.get( 'add_to_wishlist_text', config.get( 'config_language_id' ) ) != '') %} {{ theme_options.get( 'add_to_wishlist_text', config.get( 'config_language_id' ) ) }} {% else %} {{ 'Add to wishlist' }} {% endif %}</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="product-list {% if (not (theme_options.get('default_list_grid') == '1')) %}active{% endif %}">
+      {% for product in seller_products %} 
+        <div class="product product-{{ product['product_id'] }}" id="product-{{ product['product_id'] }}">
+          <div class="d-flex align-items-center">
+            <div class="left">
+              <div class="image">
+                {% if (product['special'] and theme_options.get( 'display_text_sale' ) != '0') %} 
+                  {% set text_sale = 'Sale' %}
+                  {% if (theme_options.get( 'sale_text', config.get( 'config_language_id' ) ) != '') %}
+                    {% set text_sale = theme_options.get( 'sale_text', config.get( 'config_language_id' ) ) %}
+                  {% endif %} 
+                  {% if (theme_options.get( 'type_sale' ) == '1') %} 
+                    {% set product_detail = theme_options.getDataProduct( product['product_id'] ) %}
+                    {% set roznica_ceny = product_detail['price']-product_detail['special'] %}
+                    {% set procent = roznica_ceny*100/product_detail['price'] %} 
+                    <div class="sale">-{{ procent|round }}%</div>
+                  {% else %} 
+                    <div class="sale">{{ text_sale }}</div>
+                  {% endif %} 
+                {% elseif (theme_options.get( 'display_text_new' ) != '0' and theme_options.isLatestProduct( product['product_id'] )) %} 
+                   <div class="new">{% if (theme_options.get( 'new_text', config.get( 'config_language_id' ) ) != '') %} {{ theme_options.get( 'new_text', config.get( 'config_language_id' ) ) }} {% else %} {{ 'New' }} {% endif %}</div>
+                {% endif %} 
+
+                {% if (product['thumb']) %} 
+                  {% if (theme_options.get( 'lazy_loading_images' ) != '0') %} 
+                  <a href="{{ product['href'] }}"><img src="{% if theme_options.get( 'lazy_loading_images_size') == 2 %}image/catalog/blank2.gif{% elseif theme_options.get( 'lazy_loading_images_size') == 3 %}image/catalog/blank3.gif{% else %}image/catalog/blank.gif{% endif %}" data-echo="{{ product['thumb'] }}" alt="{{ product['name'] }}" /></a>
+                  {% else %} 
+                  <a href="{{ product['href'] }}"><img src="{{ product['thumb'] }}" alt="{{ product['name'] }}" /></a>
+                  {% endif %} 
+                {% else %} 
+                <a href="{{ product['href'] }}"><img src="image/no_image.jpg" alt="{{ product['name'] }}" /></a>
+                {% endif %} 
+              </div>
+            </div>
+            <div class="right">
+              {% set product_detail = theme_options.getDataProduct( product['product_id'] ) %} 
+              <div class="brand">{{ product_detail['manufacturer'] }}</div>
+              <div class="name"><a href="{{ product['href'] }}">{{ product['name'] }}</a></div>
+		{% if multivendor_status %}
+			{% if show_seller_name %}
+				{% if product.seller_name %}
+					<p style="margin-top: 0px;"><a href="{{ product.seller_link }}">{{ text_seller_label }}&nbsp{{ product.seller_name }}</a></p>
+				{% endif %}
+			{% endif %}
+			{% if show_seller_address %}		  
+				{% if product.store_address %}		  
+					{% if product.google_map %}	
+						<a href="{{ product.google_map }}"><p style="margin-top: 0px;"><i class ="fa fa-map-marker" style = "color: #6aa5d1;"></i>&nbsp{{ product.store_address }}</p></a>
+					{% else %}
+						<p style="margin-top: 0px;"><i class ="fa fa-map-marker" style = "color: #6aa5d1;"></i>&nbsp{{ product.store_address }}</p>
+					{% endif %}
+				{% endif %}
+			{% endif %}
+		{% endif %}
+              <div class="rating-reviews clearfix">
+                <div class="rating"><i class="fa fa-star{% if (product['rating'] >= 1) %} {{ ' active' }} {% endif %}"></i><i class="fa fa-star{% if (product['rating'] >= 2) %} {{ ' active' }} {% endif %}"></i><i class="fa fa-star{% if (product['rating'] >= 3) %} {{ ' active' }} {% endif %}"></i><i class="fa fa-star{% if (product['rating'] >= 4) %} {{ ' active' }} {% endif %}"></i><i class="fa fa-star{% if (product['rating'] >= 5) %} {{ ' active' }} {% endif %}"></i></div>
+              </div>
+              <div class="price">
+                {% if (not product['special']) %} 
+                {{ product['price'] }} 
+                {% else %} 
+                <span class="price-old">{{ product['price'] }}</span> <span class="price-new">{{ product['special'] }}</span>
+                {% endif %} 
+              </div>
+              <div class="add-to-cart">
+                   {% set enquiry = constant('false') %} {% if (config.get( 'product_blocks_module' ) != '') %} {% set enquiry = theme_options.productIsEnquiry(product['product_id']) %} {% endif %}
+             {% if (enquiry is iterable) %} 
+                   <a href="javascript:openPopup('{{ enquiry['popup_module'] }}', '{{ product['product_id'] }}')" class="button button-enquiry">
+                        {% if (enquiry['icon'] != '' and enquiry['icon_position'] == 'left') %} {{ '<img src="image/' ~ enquiry['icon']~ '" align="left" class="icon-enquiry" alt="Icon">' }} {% endif %} 
+                        <span class="text-enquiry">{{ enquiry['block_name'] }}</span>
+                        {% if (enquiry['icon'] != '' and enquiry['icon_position'] == 'right') %} {{ '<img src="image/' ~ enquiry['icon']~ '" align="right" class="icon-enquiry" alt="Icon">' }} {% endif %} 
+                   </a>
+                   {% else %} 
+                   <a onclick="cart.add('{{ product['product_id'] }}');" class="button">{{ button_cart }}</a>
+                   {% endif %} 
+              </div>
+              
+              <ul class="action">
+                <li><a onclick="compare.add('{{ product['product_id'] }}');"><span><i class="fas fa-exchange-alt"></i></span>{% if (theme_options.get( 'add_to_compare_text', config.get( 'config_language_id' ) ) != '') %} {{ theme_options.get( 'add_to_compare_text', config.get( 'config_language_id' ) ) }} {% else %} {{ 'Add to compare' }} {% endif %}</a></li>
+                <li><a onclick="wishlist.add('{{ product['product_id'] }}');"><span><i class="fas fa-heart"></i></span>{% if (theme_options.get( 'add_to_wishlist_text', config.get( 'config_language_id' ) ) != '') %} {{ theme_options.get( 'add_to_wishlist_text', config.get( 'config_language_id' ) ) }} {% else %} {{ 'Add to wishlist' }} {% endif %}</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      {% endfor %} 
+    </div> 
+  {% endif %}
+  
+  <!-- Products grid -->
+  
+ {% set class = 'col-6 col-md-4 col-lg-3' %} 
+ {% if (theme_options.get( 'product_per_pow2' ) == 6) %} {% set class = 'col-6 col-md-3 col-lg-2' %} {% endif %}
+ {% if (theme_options.get( 'product_per_pow2' ) == 5) %} {% set class = 'col-6 col-md-3 col-lg-25' %} {% endif %}
+ {% if (theme_options.get( 'product_per_pow2' ) == 3) %} {% set class = 'col-6 col-md-6 col-lg-4' %} {% endif %}
+ {% if (theme_options.get( 'product_per_pow2' ) == 2) %} {% set class = 'col-12 col-md-6' %} {% endif %}
+  
+  {% if (theme_options.get('grid_type') == '1') %}
+    <div class="product-grid type-2 {% if (theme_options.get('default_list_grid') == '1') %}active{% endif %}">
+      <div class="row2">
+        {% for product in seller_products %}
+          <div class="col-12 col-md-6">
+            {% include 'zeexo/template/purpletree_zeexo_theme_elements/product_2.twig' %}
+          </div>
+        {% endfor %}
+      </div>  
+    </div>
+  {% else %}
+    <div class="product-grid {% if (theme_options.get('default_list_grid') == '1') %}active{% endif %}">
+      <div class="row">
+        {% for product in seller_products %}
+          <div class="{{ class }}">
+              {% include 'zeexo/template/purpletree_zeexo_theme_elements/product_1.twig' %}
+          </div>
+          {% set block_between_products = theme_options.getModules('block_between_products') %}
+          {% if (theme_options.get( 'product_per_pow2' ) == 2 and block_between_products|length > 0 and loop.index == 2) or (theme_options.get( 'product_per_pow2' ) == 3 and block_between_products|length > 0 and loop.index == 3) or (theme_options.get( 'product_per_pow2' ) == 4 and block_between_products|length > 0 and loop.index == 4) or (theme_options.get( 'product_per_pow2' ) == 5 and block_between_products|length > 0 and loop.index == 5) or (theme_options.get( 'product_per_pow2' ) == 6 and block_between_products|length > 0 and loop.index == 6) %}
+            <div class="col-12" id="category-banner">
+              {% for module in block_between_products %} 
+                {{ module }}
+              {% endfor %}
+            </div>
+          {% endif %}
+        {% endfor %} 
+      </div>
+    </div>
+	
+  {% endif %}
+    <div class="row pagination-results">
+    <div class="col-md-6 text-left">{{ pagination }}</div>
+    <div class="col-md-6 text-right">{{ results }}</div>
+  </div>
+  </div>
+
+
+
+
+
+					{% else %}
+					<div class="pts-text-center"><h3>{{ text_no_results }}</h3></div>
+					{% endif %}
+				</div>
+			</div>
+		</div>
+{% endif %}
+{{ content_bottom }}</div>
+</div>
+</div>
+{% if module_purpletree_multivendor_allow_live_chat %}
+{% if store_live_chat_enable %}
+{% if store_live_chat_code != '' %}
+<!--Start of Tawk.to Script-->
+<script>
+	$(document).ready(function(){
+		If($(window).width() < 768){
+			$('#ptsstorevideo').removeAttr('style');
+		}
+	});
+</script>
+<script type="text/javascript">
+	var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+	(function(){
+		var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+		s1.async=true;
+		s1.src='https://embed.tawk.to/{{ store_live_chat_code }}/default';
+		s1.charset='UTF-8';
+		s1.setAttribute('crossorigin','*');
+		s0.parentNode.insertBefore(s1,s0);
+	})();
+</script>
+<!--End of Tawk.to Script-->
+{% endif %}
+{% endif %}
+{% endif %}
+<script type="text/javascript">
+	if (localStorage.getItem('display') == 'list') {
+		$('#list-view').trigger('click');
+		} else {
+		$('#grid-view').trigger('click');
+	}
+</script>
+<script type="text/javascript"><!--
+function display(view) {
+
+  if (view == 'list') {
+    $('.product-grid').removeClass("active");
+    $('.product-list').addClass("active");
+
+    $('.display').html('<button id="grid" rel="tooltip" title="Grid" onclick="display(\'grid\');"><i class="fa fa-th"></i></button> <button id="grid2" rel="tooltip" title="Grid 2" onclick="display(\'grid2\');"><i class="fa fa-th-large"></i></button> <button class="active" id="list" rel="tooltip" title="List" onclick="display(\'list\');"><i class="fa fa-th-list"></i></button>');
+    
+    localStorage.setItem('display', 'list');
+  } else {
+    
+    if(view == 'grid2') {
+      $(".product-grid .row > div").attr("class", "col-12 col-md-12 col-lg-6");
+      $('.display').html('<button  id="grid" rel="tooltip" title="Grid" onclick="display(\'grid\');"><i class="fa fa-th"></i></button> <button class="active" id="grid2" rel="tooltip" title="Grid 2" onclick="display(\'grid2\');"><i class="fa fa-th-large"></i></button> <button id="list" rel="tooltip" title="List" onclick="display(\'list\');"><i class="fa fa-th-list"></i></button>');
+      
+      localStorage.setItem('display', 'grid2');
+    } else {
+      $(".product-grid .row > div").attr("class", "{{ class }}");
+      $('.display').html('<button class="active" id="grid" rel="tooltip" title="Grid" onclick="display(\'grid\');"><i class="fa fa-th"></i></button> <button id="grid2" rel="tooltip" title="Grid 2" onclick="display(\'grid2\');"><i class="fa fa-th-large"></i></button> <button id="list" rel="tooltip" title="List" onclick="display(\'list\');"><i class="fa fa-th-list"></i></button>');
+      
+      localStorage.setItem('display', 'grid');
+    }
+
+    $('.product-grid').addClass("active");
+    $('.product-list').removeClass("active");
+  }
+}
+
+if (localStorage.getItem('display') == 'list') {
+  display('list');
+} else if (localStorage.getItem('display') == 'grid') {
+  display('grid');
+} else if (localStorage.getItem('display') == 'grid2') {
+  display('grid2');
+} else {
+  display('{% if (theme_options.get('default_list_grid') == '1') %}{{ 'grid' }}{% else %}{{ 'list' }}{% endif %}');
+}
+//--></script> 
+</div>
+{% include 'zeexo/template/purpletree_zeexo_theme_elements/wrapper_bottom.twig' %}
+{{ footer }}

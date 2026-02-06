@@ -1,0 +1,25 @@
+#top .btn-group .dropdown-menu {
+    width: 200px !important;
+}
+div#top-links li {
+    width: 100% !important;
+}
+
+div#top-links li a {
+    padding: 0px !important;
+    font-size: 13px !important;
+    color: #666 !important;
+    font-weight: 300 !important;
+}
+
+div#top-links li i {
+    display: none;
+}
+
+div#top-links li {
+    padding: 4px 0px !important;
+}
+
+div#top-links ul li {
+    padding: 0px !important;
+}
