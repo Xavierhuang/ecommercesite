@@ -237,6 +237,28 @@
           {% endfor %}
         </fieldset>
         <fieldset>
+          <legend>{{ text_reseller_exemption }}</legend>
+          <p class="col-sm-10 col-sm-offset-2">{{ text_reseller_exemption_help }}</p>
+          <div class="form-group">
+            <label class="col-sm-2 control-label" for="input-reseller-cert">{{ entry_reseller_certificate }}</label>
+            <div class="col-sm-10">
+              <input type="file" name="reseller_certificate" id="input-reseller-cert" class="form-control" accept=".pdf,.jpg,.jpeg,.png" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-2 control-label" for="input-reseller-cert-number">{{ entry_reseller_cert_number }}</label>
+            <div class="col-sm-10">
+              <input type="text" name="reseller_cert_number" value="{{ reseller_cert_number }}" placeholder="{{ entry_reseller_cert_number }}" id="input-reseller-cert-number" class="form-control" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-2 control-label" for="input-reseller-cert-state">{{ entry_reseller_cert_state }}</label>
+            <div class="col-sm-10">
+              <input type="text" name="reseller_cert_state" value="{{ reseller_cert_state }}" placeholder="{{ entry_reseller_cert_state }}" id="input-reseller-cert-state" class="form-control" maxlength="50" />
+            </div>
+          </div>
+        </fieldset>
+        <fieldset>
           <legend>{{ text_your_password }}</legend>
           <div class="form-group required">
             <label class="col-sm-2 control-label" for="input-password">{{ entry_password }}</label>

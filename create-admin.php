@@ -2,11 +2,20 @@
 // Create a new admin user for OpenCart
 // Usage: php create-admin.php
 
-// Database configuration
-$db_host = '127.0.0.1';
-$db_user = 'root';
-$db_pass = 'root';
-$db_name = 'dev_oc_4566';
+// Use same DB as admin (load from admin/config.php)
+$admin_config = __DIR__ . '/admin/config.php';
+if (is_file($admin_config)) {
+    require_once $admin_config;
+    $db_host = DB_HOSTNAME;
+    $db_user = DB_USERNAME;
+    $db_pass = DB_PASSWORD;
+    $db_name = DB_DATABASE;
+} else {
+    $db_host = '127.0.0.1';
+    $db_user = 'root';
+    $db_pass = '';
+    $db_name = 'dev_oc_4566';
+}
 
 // New admin details
 $username = 'newadmin';
@@ -26,8 +35,8 @@ if ($conn->connect_error) {
 $salt = substr(bin2hex(random_bytes(5)), 0, 9);
 $password_hash = sha1($salt . sha1($salt . sha1($password)));
 
-// Insert new admin user
-$sql = "INSERT INTO oc_user (user_group_id, username, password, salt, firstname, lastname, email, image, code, ip, status, date_added) 
+$tbl = (defined('DB_PREFIX') ? DB_PREFIX : 'oc_') . 'user';
+$sql = "INSERT INTO `{$tbl}` (user_group_id, username, password, salt, firstname, lastname, email, image, code, ip, status, date_added) 
         VALUES (1, ?, ?, ?, ?, ?, ?, '', '', '', 1, NOW())";
 
 $stmt = $conn->prepare($sql);

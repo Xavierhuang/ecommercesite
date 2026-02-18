@@ -99,7 +99,12 @@ class Smtp {
 				}
 			}
 
-			fputs($handle, 'EHLO ' . getenv('SERVER_NAME') . "\r\n");
+			$ehlo_name = getenv('SERVER_NAME');
+			if ($ehlo_name === false || trim($ehlo_name) === '') {
+				$ehlo_name = $hostname ?: 'localhost';
+			}
+
+			fputs($handle, 'EHLO ' . $ehlo_name . "\r\n");
 
 			$reply = '';
 
@@ -117,7 +122,17 @@ class Smtp {
 			}
 
 			if (substr($reply, 0, 3) != 250) {
-				throw new \Exception('Error: EHLO not accepted from server!');
+				fputs($handle, 'HELO ' . $ehlo_name . "\r\n");
+				$reply = '';
+				while ($line = fgets($handle, 515)) {
+					$reply .= $line;
+					if (substr($line, 3, 1) == ' ') {
+						break;
+					}
+				}
+				if (substr($reply, 0, 3) != 250) {
+					throw new \Exception('Error: EHLO/HELO not accepted from server!');
+				}
 			}
 
 			if (substr($this->smtp_hostname, 0, 3) == 'tls') {
@@ -141,7 +156,7 @@ class Smtp {
 			}
 
 			if (!empty($this->smtp_username)  && !empty($this->smtp_password)) {
-				fputs($handle, 'EHLO ' . getenv('SERVER_NAME') . "\r\n");
+				fputs($handle, 'EHLO ' . $ehlo_name . "\r\n");
 
 				$reply = '';
 
@@ -154,7 +169,17 @@ class Smtp {
 				}
 
 				if (substr($reply, 0, 3) != 250) {
-					throw new \Exception('Error: EHLO not accepted from server!');
+					fputs($handle, 'HELO ' . $ehlo_name . "\r\n");
+					$reply = '';
+					while ($line = fgets($handle, 515)) {
+						$reply .= $line;
+						if (substr($line, 3, 1) == ' ') {
+							break;
+						}
+					}
+					if (substr($reply, 0, 3) != 250) {
+						throw new \Exception('Error: EHLO/HELO not accepted from server!');
+					}
 				}
 
 				fputs($handle, 'AUTH LOGIN' . "\r\n");

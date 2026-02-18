@@ -217,12 +217,13 @@ class ControllerExtensionPaymentPtsStripe extends Controller {
 		]);
 		
 
+		$callback_url = $this->url->link('extension/payment/pts_stripe/callback', '', true);
 		$checkout_session_data = [
 		  'payment_method_types' => ['klarna','card'],
 		  'line_items' => [$data['stripe_data']],
 		  'metadata' => ['order_id' => $this->session->data['order_id']],
-		  'success_url' => $this->url->link('extension/payment/pts_stripe/callback', '', true),
-		  'cancel_url' => $this->url->link('checkout/checkout'),
+		  'success_url' => $callback_url . (strpos($callback_url, '?') !== false ? '&' : '?') . 'session_id={CHECKOUT_SESSION_ID}',
+		  'cancel_url' => $this->url->link('checkout/checkout', '', true),
 		  'customer_email' => $order_info['email'],
 		];
 if($total_details > 0){
@@ -349,12 +350,36 @@ if($sub_total >= $total_discount){
 	try{
 		\Stripe\Stripe::setApiVersion('2019-08-14');
 		\Stripe\Stripe::setApiKey($stripe['secret_key']);
-		
-		$intent = \Stripe\PaymentIntent::retrieve($this->session->data['payment_intent']);
+
+		$payment_intent = null;
+		$order_id = null;
+		if (!empty($this->request->get['session_id'])) {
+			$checkout_session = \Stripe\Checkout\Session::retrieve($this->request->get['session_id'], ['expand' => ['payment_intent']]);
+			if ($checkout_session && $checkout_session->payment_status === 'paid') {
+				$payment_intent = $checkout_session->payment_intent;
+				if (is_object($payment_intent)) {
+					$payment_intent = $payment_intent->id;
+				}
+				$order_id = isset($checkout_session->metadata->order_id) ? $checkout_session->metadata->order_id : null;
+			}
+		}
+		if ($payment_intent === null) {
+			$payment_intent = isset($this->session->data['payment_intent']) ? $this->session->data['payment_intent'] : null;
+		}
+		if ($order_id === null) {
+			$order_id = isset($this->session->data['order_id']) ? $this->session->data['order_id'] : null;
+		}
+		if (!$payment_intent || !$order_id) {
+			$this->response->redirect($this->url->link('checkout/checkout', '', true));
+			return;
+		}
+		$this->session->data['payment_intent'] = $payment_intent;
+		$this->session->data['order_id'] = $order_id;
+
+		$intent = \Stripe\PaymentIntent::retrieve($payment_intent);
 		$charges = $intent->charges->data;
 		$this->load->model('checkout/order');
-		$order_info = $this->model_checkout_order->getOrder($this->session->data['order_id']);
-		$order_id=$this->session->data['order_id'];
+		$order_info = $this->model_checkout_order->getOrder($order_id);
         $source_transaction = NULL;
 		if(!empty($charges)){
 
@@ -390,16 +415,27 @@ if($sub_total >= $total_discount){
 				$this->log->write('pay_amount:' .$this->session->data['currency'].$invoiceData['total_pay_amount']);
 			}
 			try {
-				$pay_amount=number_format($this->currency->convert((float)$invoiceData['total_pay_amount'], $this->config->get('config_currency'), $this->session->data['currency']), 2, '.', '')*100;
+				$amount_units = (float)$this->currency->convert((float)$invoiceData['total_pay_amount'], $this->config->get('config_currency'), $this->session->data['currency']);
+				// Stripe fee 2.9% + 0.30 (in same currency unit); split 50/50: deduct half from seller transfer
+				$stripe_fee = $amount_units * 0.029 + 0.30;
+				$seller_fee_half = $stripe_fee / 2;
+				$transfer_units = max(0, $amount_units - $seller_fee_half);
+				$pay_amount = (int)round($transfer_units * 100);
+				if ($pay_amount < 1) {
+					$pay_amount = 0;
+				}
 				
 				$this->log->write('-------Transfer start--------');	
-				$transfer = \Stripe\Transfer::create([
-				'amount' => $pay_amount,
-				'currency' => $this->session->data['currency'],
-				'destination' => $accountId,
-				'transfer_group' => $this->session->data['order_id'],
-                'source_transaction' => $source_transaction,
-				]);
+				$transfer = null;
+				if ($pay_amount >= 1) {
+					$transfer = \Stripe\Transfer::create([
+					'amount' => $pay_amount,
+					'currency' => $this->session->data['currency'],
+					'destination' => $accountId,
+					'transfer_group' => $this->session->data['order_id'],
+					'source_transaction' => $source_transaction,
+					]);
+				}
 				
 				/* $payout = \Stripe\Payout::create([
 				  'amount' => $pay_amount,
@@ -415,18 +451,11 @@ if($sub_total >= $total_discount){
 			$messageseller.=$e->getMessage(); 
 		}
 				$status = 'Pending';
-				$status_id=1;
-				$msg='Seller Payment is pending';
-				if(isset($payout['status'])){
-				 if($payout['status']=='paid'){
-					$status_id=2;
-					$status='Complete';
-					$msg='Seller Payment is Complete';
-					} 
-				} 
-				$payoutId='';
-				if(isset($payout['id'])){
-					$payoutId=$payout['id'];
+				$status_id = 1;
+				$msg = 'Seller Payment is pending';
+				$payoutId = '';
+				if (!empty($transfer) && isset($transfer->id)) {
+					$payoutId = $transfer->id;
 				}
 				$messageseller.=$msg;
 				 $transData=array(
@@ -452,11 +481,11 @@ if($sub_total >= $total_discount){
 				$this->model_checkout_order->addOrderHistory($order_id, $this->config->get('config_order_status_id'));
 				$this->response->redirect($this->url->link('checkout/success'));
 			}
-	} 
-	catch(Exception $e){
-			if ($this->config->get('payment_pts_stripe_debug')) {
-					  $this->log->write('Message:' .$e->getMessage());
-			 }
+	} catch (Exception $e) {
+		if ($this->config->get('payment_pts_stripe_debug')) {
+			$this->log->write('Message:' . $e->getMessage());
+		}
+		$this->response->redirect($this->url->link('checkout/success', '', true));
 	}
 }
 

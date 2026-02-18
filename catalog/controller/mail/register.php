@@ -41,7 +41,11 @@ class ControllerMailRegister extends Controller {
 		$mail->setSender(html_entity_decode($this->config->get('config_name'), ENT_QUOTES, 'UTF-8'));
 		$mail->setSubject(sprintf($this->language->get('text_subject'), html_entity_decode($this->config->get('config_name'), ENT_QUOTES, 'UTF-8')));
 		$mail->setText($this->load->view('mail/register', $data));
-		$mail->send(); 
+		try {
+			$mail->send();
+		} catch (\Exception $e) {
+			$this->log->write('Mail (register): ' . $e->getMessage());
+		}
 	}
 	
 	public function alert(&$route, &$args, &$output) {
@@ -91,17 +95,21 @@ class ControllerMailRegister extends Controller {
 			$mail->setSender(html_entity_decode($this->config->get('config_name'), ENT_QUOTES, 'UTF-8'));
 			$mail->setSubject(html_entity_decode($this->language->get('text_new_customer'), ENT_QUOTES, 'UTF-8'));
 			$mail->setText($this->load->view('mail/register_alert', $data));
-			$mail->send();
+			try {
+				$mail->send();
 
-			// Send to additional alert emails if new account email is enabled
-			$emails = explode(',', $this->config->get('config_mail_alert_email'));
+				// Send to additional alert emails if new account email is enabled
+				$emails = explode(',', $this->config->get('config_mail_alert_email'));
 
-			foreach ($emails as $email) {
-				if (utf8_strlen($email) > 0 && filter_var($email, FILTER_VALIDATE_EMAIL)) {
-					$mail->setTo($email);
-					$mail->send();
+				foreach ($emails as $email) {
+					if (utf8_strlen($email) > 0 && filter_var($email, FILTER_VALIDATE_EMAIL)) {
+						$mail->setTo($email);
+						$mail->send();
+					}
 				}
+			} catch (\Exception $e) {
+				$this->log->write('Mail (register alert): ' . $e->getMessage());
 			}
-		}	
+		}
 	}
 }		

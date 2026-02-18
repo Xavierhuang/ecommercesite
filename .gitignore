@@ -5,3 +5,12 @@ storage/session/
 storage/upload/
 storage/modification/
 *.log
+
+# Uploaded reseller certificates (user data)
+image/catalog/reseller_certs/
+
+# Deploy password (never commit)
+.deploy-secret
+
+# Stripe test script config (contains secrets)
+stripe-connect-test-config.php

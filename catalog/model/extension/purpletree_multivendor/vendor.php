@@ -593,7 +593,13 @@ class ModelExtensionPurpletreeMultivendorVendor extends Model{
 				}
 			}
 			$mail->setHtml(html_entity_decode($message));
-			$mail->send();
+			try {
+				$mail->send();
+			} catch (\Exception $e) {
+				if ($this->registry && $this->registry->get('log')) {
+					$this->registry->get('log')->write('Mail send failed (seller/vendor): ' . $e->getMessage());
+				}
+			}
 		}
 	public function getCustomFieldValues($custom_field_id) {
 		$custom_field_value_data = array();

@@ -1,8 +1,16 @@
 <?php
 class ControllerCheckoutCheckout extends Controller {
 	public function index() {
-		// Validate cart has products and has stock.		
+		// Validate cart has products and has stock.
 		if ((!$this->cart->hasProducts() && empty($this->session->data['vouchers'])) || (!$this->cart->hasStock() && !$this->config->get('config_stock_checkout'))) {
+			$this->response->redirect($this->url->link('checkout/cart'));
+		}
+
+		// Minimum order amount (scope 2.3(A)): enforce when low order fee total is configured
+		$min_total = (float)$this->config->get('total_low_order_fee_total');
+		if ($this->config->get('total_low_order_fee_status') && $min_total > 0 && $this->cart->getSubTotal() < $min_total) {
+			$this->load->language('checkout/checkout');
+			$this->session->data['error'] = sprintf($this->language->get('error_minimum_order'), $this->currency->format($min_total, $this->session->data['currency']));
 			$this->response->redirect($this->url->link('checkout/cart'));
 		}
 
@@ -26,6 +34,7 @@ class ControllerCheckoutCheckout extends Controller {
 		$this->load->language('checkout/checkout');
 
 		$this->document->setTitle($this->language->get('heading_title'));
+		$this->document->setRobots('noindex, nofollow');
 
 		$this->document->addScript('catalog/view/javascript/jquery/datetimepicker/moment/moment.min.js');
 		$this->document->addScript('catalog/view/javascript/jquery/datetimepicker/moment/moment-with-locales.min.js');

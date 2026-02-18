@@ -17,16 +17,21 @@ $report['php']['error_reporting'] = ini_get('error_reporting');
 $report['php']['extensions'] = get_loaded_extensions();
 
 // 3. DATABASE INFO
-$conn = new mysqli('127.0.0.1', 'root', 'root', 'dev_oc_4566');
+// Match config.php: default root with no password; override via env if needed
+$db_host = getenv('DB_HOST') ?: '127.0.0.1';
+$db_user = getenv('DB_USER') ?: 'root';
+$db_pass = getenv('DB_PASS') !== false ? getenv('DB_PASS') : '';
+$db_name = getenv('DB_NAME') ?: 'dev_oc_4566';
+$conn = new mysqli($db_host, $db_user, $db_pass, $db_name);
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
 $report['database']['version'] = $conn->server_info;
-$report['database']['name'] = 'dev_oc_4566';
+$report['database']['name'] = $db_name;
 
 // Get table count
-$result = $conn->query("SELECT COUNT(*) as count FROM information_schema.tables WHERE table_schema = 'dev_oc_4566'");
+$result = $conn->query("SELECT COUNT(*) as count FROM information_schema.tables WHERE table_schema = '" . $conn->real_escape_string($db_name) . "'");
 $row = $result->fetch_assoc();
 $report['database']['table_count'] = $row['count'];
 

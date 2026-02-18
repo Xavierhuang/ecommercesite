@@ -6,16 +6,17 @@ class File {
 	public function __construct($expire = 3600) {
 		$this->expire = $expire;
 
+		// Run cleanup on ~1% of requests to reduce I/O under high traffic (expired files are ignored on get)
+		if (function_exists('random_int') && random_int(1, 100) !== 1) {
+			return;
+		}
 		$files = glob(DIR_CACHE . 'cache.*');
-
 		if ($files) {
+			$now = time();
 			foreach ($files as $file) {
 				$time = substr(strrchr($file, '.'), 1);
-
-				if ($time < time()) {
-					if (file_exists($file)) {
-						unlink($file);
-					}
+				if (is_numeric($time) && (int)$time < $now && file_exists($file)) {
+					@unlink($file);
 				}
 			}
 		}

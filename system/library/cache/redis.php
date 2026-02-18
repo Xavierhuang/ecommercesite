@@ -13,6 +13,9 @@ class Redis {
 
     public function get($key) {
         $data = $this->cache->get(CACHE_PREFIX . $key);
+        if ($data === false) {
+            return false;
+        }
         return json_decode($data, true);
     }
 

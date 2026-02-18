@@ -43,6 +43,9 @@
 {% for analytic in analytics %}
 {{ analytic }}
 {% endfor %}
+{% if analytics_helper_html %}
+{{ analytics_helper_html|raw }}
+{% endif %}
 </head>
 <body> 
 <body> 

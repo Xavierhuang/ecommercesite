@@ -32,6 +32,7 @@ $_['text_general']                   = 'General';
 $_['text_security']                  = 'Security';
 $_['text_upload']                    = 'Uploads';
 $_['text_error']                     = 'Error Handling';
+$_['text_analytics']                 = 'Analytics';
 
 // Entry
 $_['entry_meta_title']               = 'Meta Title';
@@ -122,6 +123,8 @@ $_['entry_error_display']            = 'Display Errors';
 $_['entry_error_log']                = 'Log Errors';
 $_['entry_error_filename']           = 'Error Log Filename';
 $_['entry_status']                   = 'Status';
+$_['entry_ga4_measurement_id']       = 'Google Analytics 4 Measurement ID';
+$_['entry_facebook_pixel_id']        = 'Facebook Pixel ID';
 
 // Help
 $_['help_geocode']                   = 'Please enter your store location geocode manually.';
@@ -182,6 +185,11 @@ $_['help_maintenance']               = 'Prevents customers from browsing your st
 $_['help_password']                  = 'Allow forgotten password to be used for the admin. This will be disabled automatically if the system detects a hack attempt.';
 $_['help_encryption']                = 'Please provide a secret key that will be used to encrypt private information when processing orders.';
 $_['help_compression']               = 'GZIP for more efficient transfer to requesting clients. Compression level must be between 0 - 9.';
+$_['help_ga4_measurement_id']        = 'Your GA4 Measurement ID (e.g. G-XXXXXXXXXX). Find it in Admin > Data Streams > Web stream. Leave empty to disable.';
+$_['help_facebook_pixel_id']         = 'Your Facebook Pixel ID (numeric). Find it in Events Manager > Data Sources > Pixel. Leave empty to disable.';
+
+// Tab
+$_['tab_analytics']                  = 'Analytics';
 
 // Error
 $_['error_warning']                  = 'Warning: Please check the form carefully for errors!';

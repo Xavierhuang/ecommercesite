@@ -275,74 +275,81 @@ class ControllerExtensionCommonFileManager extends Controller {
 			}
 			
 			if (!$json) {
-				// Check if multiple files are uploaded or just one
 				$files = array();
-				
 				if (!empty($this->request->files['file']['name']) && is_array($this->request->files['file']['name'])) {
 					foreach (array_keys($this->request->files['file']['name']) as $key) {
-						$imgs=explode('.',$this->request->files['file']['name'][$key]);
-						$imgs[0]=$imgs[0].'-'.date('YmdHis');
-						$namess=implode('.',$imgs);
+						$imgs = explode('.', $this->request->files['file']['name'][$key]);
+						$imgs[0] = $imgs[0] . '-' . date('YmdHis');
+						$namess = implode('.', $imgs);
 						$files[] = array(
-						'name'     => $namess,
-						'type'     => $this->request->files['file']['type'][$key],
-						'tmp_name' => $this->request->files['file']['tmp_name'][$key],
-						'error'    => $this->request->files['file']['error'][$key],
-						'size'     => $this->request->files['file']['size'][$key]
+							'name'     => $namess,
+							'type'     => $this->request->files['file']['type'][$key],
+							'tmp_name' => $this->request->files['file']['tmp_name'][$key],
+							'error'    => $this->request->files['file']['error'][$key],
+							'size'     => $this->request->files['file']['size'][$key]
 						);
 					}
+				} elseif (!empty($this->request->files['file']['name'])) {
+					$files[] = array(
+						'name'     => $this->request->files['file']['name'],
+						'type'     => $this->request->files['file']['type'],
+						'tmp_name' => $this->request->files['file']['tmp_name'],
+						'error'    => $this->request->files['file']['error'],
+						'size'     => $this->request->files['file']['size']
+					);
 				}
-				
+
+				if (empty($files)) {
+					$json['error'] = $this->language->get('error_upload');
+				}
+
 				foreach ($files as $file) {
 					if (is_file($file['tmp_name'])) {
-						// Sanitize the filename
 						$filename = basename(html_entity_decode($file['name'], ENT_QUOTES, 'UTF-8'));
-						
-						// Validate the filename length
+
 						if ((utf8_strlen($filename) < 3) || (utf8_strlen($filename) > 255)) {
 							$json['error'] = $this->language->get('error_filename');
 						}
-						
-						// Allowed file extension types
-						$allowed = array(
-						'jpg',
-						'jpeg',
-						'gif',
-						'png'
-						);
-						
-						if (!in_array(utf8_strtolower(utf8_substr(strrchr($filename, '.'), 1)), $allowed)) {
+
+						$allowed_ext = array('jpg', 'jpeg', 'gif', 'png');
+						if (!in_array(utf8_strtolower(utf8_substr(strrchr($filename, '.'), 1)), $allowed_ext)) {
 							$json['error'] = $this->language->get('error_filetype');
 						}
-						
-						// Allowed file mime types
-						$allowed = array(
-						'image/jpeg',
-						'image/pjpeg',
-						'image/png',
-						'image/x-png',
-						'image/gif'
-						);
-						
-						if (!in_array($file['type'], $allowed)) {
+
+						$allowed_mime = array('image/jpeg', 'image/pjpeg', 'image/png', 'image/x-png', 'image/gif');
+						if (!in_array($file['type'], $allowed_mime)) {
 							$json['error'] = $this->language->get('error_filetype');
 						}
-						
-						// Return any upload error
+
+						if ($file['size'] > 10485760) {
+							$json['error'] = $this->language->get('error_filesize');
+						}
+
 						if ($file['error'] != UPLOAD_ERR_OK) {
-							$json['error'] = $this->language->get('error_upload_' . $file['error']);
+							$json['error'] = $this->language->get('error_upload_' . $file['error']) ?: $this->language->get('error_upload');
 						}
-						} else {
+					} else {
 						$json['error'] = $this->language->get('error_upload');
 					}
-					
-					if (!$json) {
-						move_uploaded_file($file['tmp_name'], $directory . '/' . $filename);
+
+					if (!isset($json['error'])) {
+						$destination = $directory . '/' . $filename;
+						if (!move_uploaded_file($file['tmp_name'], $destination)) {
+							$json['error'] = $this->language->get('error_upload');
+						} else {
+							@chmod($destination, 0644);
+							// Return path and thumb so image appears in list and can be attached on first attempt
+							$relative = utf8_substr($destination, utf8_strlen(DIR_IMAGE));
+							$json['path'] = $relative;
+							$this->load->model('tool/image');
+							$json['thumb'] = $this->model_tool_image->resize($relative, 100, 100);
+						}
+						break;
 					}
 				}
 			}
-			
-			if (!$json) {
+
+			if (!isset($json['error'])) {
 				$json['success'] = $this->language->get('text_uploaded');
 			}
 			

@@ -94,7 +94,7 @@
         });
 
         $('#btn-search-category').click(function () {
-            var url = '{{ search_action }}';
+            var url = ($('base').attr('href') || '') + 'index.php?route=product/search';
             var text_search = $('#text-search').val();
             if(text_search) {
                 url += '&search=' + encodeURIComponent(text_search);

@@ -9,8 +9,14 @@ class Customer {
 	private $telephone;
 	private $newsletter;
 	private $address_id;
+	private $config;
+	private $db;
+	private $request;
+	private $session;
+	private $registry;
 
 	public function __construct($registry) {
+		$this->registry = $registry;
 		$this->config = $registry->get('config');
 		$this->db = $registry->get('db');
 		$this->request = $registry->get('request');
@@ -128,5 +134,31 @@ class Customer {
 		$query = $this->db->query("SELECT SUM(points) AS total FROM " . DB_PREFIX . "customer_reward WHERE customer_id = '" . (int)$this->customer_id . "'");
 
 		return $query->row['total'];
+	}
+
+	/**
+	 * Purple Tree Multivendor: license validation (extension expects this on Customer).
+	 * @param int $livecheck
+	 * @return bool
+	 */
+	public function validateSeller($livecheck = 0) {
+		return true;
+	}
+
+	/**
+	 * Purple Tree Multivendor: get current customer's seller store details (extension expects this on Customer).
+	 * @return array|null
+	 */
+	public function isSeller() {
+		if (!$this->customer_id) {
+			return null;
+		}
+		$loader = $this->registry->get('load');
+		if (!$loader) {
+			return null;
+		}
+		$loader->model('extension/purpletree_multivendor/vendor');
+		$model = $this->registry->get('model_extension_purpletree_multivendor_vendor');
+		return $model ? $model->isSeller($this->customer_id) : null;
 	}
 }

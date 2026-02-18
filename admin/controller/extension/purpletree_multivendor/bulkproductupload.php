@@ -915,6 +915,23 @@ class ControllerExtensionPurpletreeMultivendorBulkproductupload extends Controll
 			foreach($datas as $key => $data)
 			{
 			if($key!=1) {	
+			// Pre-import validation: clear error reporting for this row
+			$row_errors = array();
+			if (empty(trim((string)$data['model']))) {
+				$row_errors[] = 'Model is required';
+			}
+			if (isset($data['price']) && $data['price'] !== '' && !is_numeric($data['price'])) {
+				$row_errors[] = 'Price must be numeric';
+			}
+			if (isset($data['quantity']) && $data['quantity'] !== '' && !is_numeric($data['quantity'])) {
+				$row_errors[] = 'Quantity must be numeric';
+			}
+			if (!empty($row_errors)) {
+				$logger->write("Row " . $key . " validation failed: " . implode('; ', $row_errors));
+				$status_msgg[] = array("status" => "error", "msg" => "Row " . $key . " (" . (isset($data['product_id']) ? $data['product_id'] : '') . "): " . implode('; ', $row_errors));
+				$failed_array[] = isset($data['product_id']) ? $data['product_id'] : $key;
+				continue;
+			}
 			$sourcecode = $this->GetImageFromUrl(trim($data['image']));
 			$image_prefix= date('dmYhms').rand(111,999).'_';	
 			
@@ -1137,7 +1154,7 @@ class ControllerExtensionPurpletreeMultivendorBulkproductupload extends Controll
 			}
 			}catch(Exception $e){ 
 			$logger->write("Product ID ".$data['product_id']." Error ! ".$e->getMessage()); 
-			$status_msgg[] = array("status"=>"success", "msg" => "Product ID ".$data['product_id']." Error ! ".$e->getMessage());
+			$status_msgg[] = array("status"=>"error", "msg" => "Product ID ".$data['product_id']." Error ! ".$e->getMessage());
 			$failed_array[] = $data['product_id'];	
 			}
 			}

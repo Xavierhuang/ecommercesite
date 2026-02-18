@@ -1,4 +1,10 @@
 {{ header }}
+{% if json_ld_website %}
+<script type="application/ld+json">{{ json_ld_website|raw }}</script>
+{% endif %}
+{% if json_ld_organization %}
+<script type="application/ld+json">{{ json_ld_organization|raw }}</script>
+{% endif %}
 <script>
 	$(document).ready(function(){
 		$(".banner7-readmore a.link-more").html("Shop now");

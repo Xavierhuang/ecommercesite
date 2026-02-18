@@ -876,6 +876,18 @@ class ControllerSettingSetting extends Controller {
 			$data['config_error_filename'] = $this->config->get('config_error_filename');
 		}
 
+		if (isset($this->request->post['config_ga4_measurement_id'])) {
+			$data['config_ga4_measurement_id'] = $this->request->post['config_ga4_measurement_id'];
+		} else {
+			$data['config_ga4_measurement_id'] = $this->config->get('config_ga4_measurement_id');
+		}
+
+		if (isset($this->request->post['config_facebook_pixel_id'])) {
+			$data['config_facebook_pixel_id'] = $this->request->post['config_facebook_pixel_id'];
+		} else {
+			$data['config_facebook_pixel_id'] = $this->config->get('config_facebook_pixel_id');
+		}
+
 		$data['header'] = $this->load->controller('common/header');
 		$data['column_left'] = $this->load->controller('common/column_left');
 		$data['footer'] = $this->load->controller('common/footer');

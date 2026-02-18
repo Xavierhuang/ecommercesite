@@ -201,6 +201,90 @@ class ModelExtensionPurpletreeMultivendorQuickOrder extends Model {
 		// if Flat Rate shipping
 		return $weightt;	
 	}
+
+	/**
+	 * Get total seller shipping for current cart and address (for shipping quote at checkout).
+	 * Returns string: total cost, '' for no quote, or 'a' for not available.
+	 */
+	public function getQuoteShipping($address) {
+		$data = array(
+			'shipping_country_id' => isset($address['country_id']) ? $address['country_id'] : 0,
+			'shipping_zone_id'    => isset($address['zone_id']) ? $address['zone_id'] : 0,
+			'shipping_postcode'   => isset($address['postcode']) ? $address['postcode'] : ''
+		);
+		$cart = $this->registry->get('cart');
+		$products = $cart->getProducts();
+		if (empty($products)) {
+			return '';
+		}
+		$seller_shipping = array();
+		$seller_shipping1 = array();
+		$store_shipping_type = array();
+		$store_shipping_charge = array();
+		$store_shipping_order_type = array();
+
+		foreach ($products as $product) {
+			$seller_id = null;
+			if ($this->config->get('module_purpletree_multivendor_status')) {
+				$seller_id = $this->db->query("SELECT pvp.seller_id, pvs.store_shipping_charge, pvs.store_shipping_order_type, pvs.store_shipping_type, pvs.store_commission, p.tax_class_id FROM " . DB_PREFIX . "purpletree_vendor_products pvp JOIN " . DB_PREFIX . "purpletree_vendor_stores pvs ON (pvs.seller_id = pvp.seller_id) JOIN " . DB_PREFIX . "product p ON (p.product_id = pvp.product_id) WHERE pvp.product_id = '" . (int)$product['product_id'] . "' AND pvp.is_approved = 1")->row;
+				if ($this->config->get('module_purpletree_multivendor_seller_product_template') && (empty($seller_id['seller_id']))) {
+					$sseller_id = isset($product['seller_id']) ? $product['seller_id'] : 0;
+					$seller_id = $this->db->query("SELECT pvs.seller_id, pvs.store_shipping_charge, pvs.store_shipping_order_type, pvs.store_shipping_type, pvs.store_commission, p.tax_class_id FROM " . DB_PREFIX . "purpletree_vendor_template_products pvtp JOIN " . DB_PREFIX . "purpletree_vendor_stores pvs ON (pvs.seller_id = pvtp.seller_id) JOIN " . DB_PREFIX . "purpletree_vendor_template pvt ON (pvt.id = pvtp.template_id) JOIN " . DB_PREFIX . "product p ON (p.product_id = pvt.product_id) WHERE pvt.product_id = '" . (int)$product['product_id'] . "' AND pvs.seller_id = '" . $this->db->escape($sseller_id) . "'")->row;
+				}
+			}
+			if (empty($seller_id['seller_id'])) {
+				$seller_id = array(
+					'seller_id' => 0,
+					'store_shipping_type' => $this->config->get('shipping_purpletree_shipping_type'),
+					'store_shipping_order_type' => $this->config->get('shipping_purpletree_shipping_order_type'),
+					'store_shipping_charge' => $this->config->get('shipping_purpletree_shipping_charge')
+				);
+			}
+			$getsellershipping = $this->getsellershipping($seller_id, $product, $data);
+			$getsellershipping1 = $this->getsellershipping1($seller_id, $product, $data);
+			$sid = $seller_id['seller_id'];
+			if (!isset($seller_shipping[$sid])) {
+				$seller_shipping[$sid] = $getsellershipping;
+				$seller_shipping1[$sid] = $getsellershipping1;
+			} else {
+				$seller_shipping[$sid] += $getsellershipping;
+				$seller_shipping1[$sid] += $getsellershipping1;
+			}
+			$store_shipping_type[$sid] = !empty($seller_id['store_shipping_type']) ? $seller_id['store_shipping_type'] : 'pts_flat_rate_shipping';
+			$store_shipping_charge[$sid] = isset($seller_id['store_shipping_charge']) && $seller_id['store_shipping_charge'] !== '' ? $seller_id['store_shipping_charge'] : '0';
+			$store_shipping_order_type[$sid] = !empty($seller_id['store_shipping_order_type']) ? $seller_id['store_shipping_order_type'] : 'pts_product_wise';
+		}
+
+		if (!empty($seller_shipping1)) {
+			foreach ($seller_shipping1 as $sellerid => $totalweight) {
+				if (isset($store_shipping_order_type[$sellerid]) && $store_shipping_order_type[$sellerid] == 'pts_order_wise') {
+					$getMatrixShippingCharge1 = $this->getMatrixShippingCharge($data, $totalweight, $sellerid);
+					if (isset($store_shipping_type[$sellerid])) {
+						if ($store_shipping_type[$sellerid] == 'pts_matrix_shipping') {
+							if ($getMatrixShippingCharge1) {
+								$seller_shipping[$sellerid] += $getMatrixShippingCharge1;
+							}
+						} elseif ($store_shipping_type[$sellerid] == 'pts_flexible_shipping') {
+							if ($getMatrixShippingCharge1) {
+								$seller_shipping[$sellerid] += $getMatrixShippingCharge1;
+							} else {
+								$seller_shipping[$sellerid] += $store_shipping_charge[$sellerid];
+							}
+						} elseif ($store_shipping_type[$sellerid] == 'pts_flat_rate_shipping') {
+							$seller_shipping[$sellerid] += $store_shipping_charge[$sellerid];
+						}
+					}
+				}
+			}
+		}
+
+		$total = 0;
+		foreach ($seller_shipping as $value) {
+			$total += (float)$value;
+		}
+		return $total > 0 || (count($seller_shipping) > 0 && $total == 0) ? (string)$total : '';
+	}
+
 	public function getsellerInfofororder($sellerid) { 	
 		    $query = $this->db->query("SELECT pvs.store_name, pvs.id AS store_id FROM " . DB_PREFIX . "purpletree_vendor_stores pvs  WHERE pvs.seller_id = '" . (int)$sellerid . "'");    
 		     return $query->row;

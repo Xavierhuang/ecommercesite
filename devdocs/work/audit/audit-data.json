@@ -1,0 +1,926 @@
+{
+    "php": {
+        "version": "8.5.1",
+        "memory_limit": "128M",
+        "max_execution_time": "0",
+        "upload_max_filesize": "2M",
+        "post_max_size": "8M",
+        "display_errors": "1",
+        "error_reporting": "30719",
+        "extensions": [
+            "Core",
+            "date",
+            "lexbor",
+            "openssl",
+            "pcre",
+            "sqlite3",
+            "zlib",
+            "bcmath",
+            "bz2",
+            "calendar",
+            "ctype",
+            "curl",
+            "dba",
+            "uri",
+            "json",
+            "mbstring",
+            "SPL",
+            "FFI",
+            "fileinfo",
+            "filter",
+            "ftp",
+            "gd",
+            "gettext",
+            "gmp",
+            "hash",
+            "iconv",
+            "intl",
+            "session",
+            "ldap",
+            "standard",
+            "libxml",
+            "mysqlnd",
+            "mysqli",
+            "odbc",
+            "Zend OPcache",
+            "pcntl",
+            "PDO",
+            "pdo_dblib",
+            "pdo_mysql",
+            "PDO_ODBC",
+            "pdo_pgsql",
+            "pdo_sqlite",
+            "pgsql",
+            "Phar",
+            "posix",
+            "random",
+            "readline",
+            "Reflection",
+            "exif",
+            "shmop",
+            "SimpleXML",
+            "snmp",
+            "soap",
+            "sockets",
+            "sodium",
+            "sysvmsg",
+            "sysvsem",
+            "sysvshm",
+            "tidy",
+            "tokenizer",
+            "dom",
+            "xml",
+            "xmlreader",
+            "xmlwriter",
+            "xsl",
+            "zip"
+        ]
+    },
+    "database": {
+        "version": "9.5.0",
+        "name": "dev_oc_4566",
+        "table_count": "307"
+    },
+    "opencart": {
+        "version": "Unknown",
+        "name": "Diversiply",
+        "email": "diversiply@gmail.com",
+        "theme": "tt_makali3"
+    },
+    "extensions": [
+        {
+            "type": "analytics",
+            "code": "google"
+        },
+        {
+            "type": "captcha",
+            "code": "basic"
+        },
+        {
+            "type": "captcha",
+            "code": "google"
+        },
+        {
+            "type": "dashboard",
+            "code": "activity"
+        },
+        {
+            "type": "dashboard",
+            "code": "chart"
+        },
+        {
+            "type": "dashboard",
+            "code": "customer"
+        },
+        {
+            "type": "dashboard",
+            "code": "map"
+        },
+        {
+            "type": "dashboard",
+            "code": "online"
+        },
+        {
+            "type": "dashboard",
+            "code": "order"
+        },
+        {
+            "type": "dashboard",
+            "code": "recent"
+        },
+        {
+            "type": "dashboard",
+            "code": "sale"
+        },
+        {
+            "type": "feed",
+            "code": "google_sitemap"
+        },
+        {
+            "type": "module",
+            "code": "account"
+        },
+        {
+            "type": "module",
+            "code": "carousel"
+        },
+        {
+            "type": "module",
+            "code": "category"
+        },
+        {
+            "type": "module",
+            "code": "html"
+        },
+        {
+            "type": "module",
+            "code": "information"
+        },
+        {
+            "type": "module",
+            "code": "newslettersubscribe"
+        },
+        {
+            "type": "module",
+            "code": "ocajaxlogin"
+        },
+        {
+            "type": "module",
+            "code": "ocblog"
+        },
+        {
+            "type": "module",
+            "code": "occmsblock"
+        },
+        {
+            "type": "module",
+            "code": "ocfeaturedcategory"
+        },
+        {
+            "type": "module",
+            "code": "ocmegamenu"
+        },
+        {
+            "type": "module",
+            "code": "ocproduct"
+        },
+        {
+            "type": "module",
+            "code": "ocsearchcategory"
+        },
+        {
+            "type": "module",
+            "code": "ocslideshow"
+        },
+        {
+            "type": "module",
+            "code": "octabproducts"
+        },
+        {
+            "type": "module",
+            "code": "octestimonial"
+        },
+        {
+            "type": "module",
+            "code": "octhemeoption"
+        },
+        {
+            "type": "module",
+            "code": "oc_page_builder"
+        },
+        {
+            "type": "module",
+            "code": "purpletree_casellerfeatured"
+        },
+        {
+            "type": "module",
+            "code": "purpletree_featuredstore"
+        },
+        {
+            "type": "module",
+            "code": "purpletree_latestseller_products"
+        },
+        {
+            "type": "module",
+            "code": "purpletree_multivendor"
+        },
+        {
+            "type": "module",
+            "code": "purpletree_sellerblog"
+        },
+        {
+            "type": "module",
+            "code": "purpletree_sellerdetail"
+        },
+        {
+            "type": "module",
+            "code": "purpletree_sellerfeatured"
+        },
+        {
+            "type": "module",
+            "code": "purpletree_sellerprice"
+        },
+        {
+            "type": "payment",
+            "code": "amazon_login_pay"
+        },
+        {
+            "type": "payment",
+            "code": "free_checkout"
+        },
+        {
+            "type": "payment",
+            "code": "klarna_checkout"
+        },
+        {
+            "type": "payment",
+            "code": "klarna_invoice"
+        },
+        {
+            "type": "payment",
+            "code": "pp_adaptive"
+        },
+        {
+            "type": "payment",
+            "code": "pts_stripe"
+        },
+        {
+            "type": "payment",
+            "code": "wk_stripe"
+        },
+        {
+            "type": "report",
+            "code": "customer_activity"
+        },
+        {
+            "type": "report",
+            "code": "customer_order"
+        },
+        {
+            "type": "report",
+            "code": "customer_reward"
+        },
+        {
+            "type": "report",
+            "code": "customer_search"
+        },
+        {
+            "type": "report",
+            "code": "customer_transaction"
+        },
+        {
+            "type": "report",
+            "code": "product_purchased"
+        },
+        {
+            "type": "report",
+            "code": "product_viewed"
+        },
+        {
+            "type": "report",
+            "code": "sale_coupon"
+        },
+        {
+            "type": "report",
+            "code": "sale_order"
+        },
+        {
+            "type": "report",
+            "code": "sale_return"
+        },
+        {
+            "type": "report",
+            "code": "sale_shipping"
+        },
+        {
+            "type": "report",
+            "code": "sale_tax"
+        },
+        {
+            "type": "shipping",
+            "code": "flat"
+        },
+        {
+            "type": "shipping",
+            "code": "purpletree_shipping"
+        },
+        {
+            "type": "shipping",
+            "code": "weight"
+        },
+        {
+            "type": "theme",
+            "code": "default"
+        },
+        {
+            "type": "total",
+            "code": "coupon"
+        },
+        {
+            "type": "total",
+            "code": "credit"
+        },
+        {
+            "type": "total",
+            "code": "handling"
+        },
+        {
+            "type": "total",
+            "code": "low_order_fee"
+        },
+        {
+            "type": "total",
+            "code": "reward"
+        },
+        {
+            "type": "total",
+            "code": "shipping"
+        },
+        {
+            "type": "total",
+            "code": "sub_total"
+        },
+        {
+            "type": "total",
+            "code": "tax"
+        },
+        {
+            "type": "total",
+            "code": "total"
+        },
+        {
+            "type": "total",
+            "code": "voucher"
+        }
+    ],
+    "modules": [
+        {
+            "id": "530",
+            "name": "Best seller products 01",
+            "code": "ocproduct"
+        },
+        {
+            "id": "536",
+            "name": "Best seller products 02",
+            "code": "ocproduct"
+        },
+        {
+            "id": "548",
+            "name": "Best seller tabs product 05",
+            "code": "octabproducts"
+        },
+        {
+            "id": "543",
+            "name": "Block Title 04",
+            "code": "occmsblock"
+        },
+        {
+            "id": "130",
+            "name": "Blog 1",
+            "code": "ocblog"
+        },
+        {
+            "id": "550",
+            "name": "Blog 5",
+            "code": "ocblog"
+        },
+        {
+            "id": "531",
+            "name": "BrandSlider",
+            "code": "carousel"
+        },
+        {
+            "id": "528",
+            "name": "Deal products 01",
+            "code": "ocproduct"
+        },
+        {
+            "id": "549",
+            "name": "Deal products 05",
+            "code": "ocproduct"
+        },
+        {
+            "id": "449",
+            "name": "Featured Category 01",
+            "code": "ocfeaturedcategory"
+        },
+        {
+            "id": "534",
+            "name": "Featured Products 01",
+            "code": "ocproduct"
+        },
+        {
+            "id": "541",
+            "name": "Featured Products1 04",
+            "code": "ocproduct"
+        },
+        {
+            "id": "542",
+            "name": "Featured Products2 04",
+            "code": "ocproduct"
+        },
+        {
+            "id": "191",
+            "name": "Footer Contact",
+            "code": "occmsblock"
+        },
+        {
+            "id": "532",
+            "name": "Footer Map",
+            "code": "occmsblock"
+        },
+        {
+            "id": "501",
+            "name": "Header Phone",
+            "code": "occmsblock"
+        },
+        {
+            "id": "41",
+            "name": "Home slideshow 1",
+            "code": "ocslideshow"
+        },
+        {
+            "id": "380",
+            "name": "Home slideshow 2",
+            "code": "ocslideshow"
+        },
+        {
+            "id": "420",
+            "name": "Home slideshow 3",
+            "code": "ocslideshow"
+        },
+        {
+            "id": "254",
+            "name": "Home slideshow 4",
+            "code": "ocslideshow"
+        },
+        {
+            "id": "552",
+            "name": "Home slideshow 5",
+            "code": "ocslideshow"
+        },
+        {
+            "id": "555",
+            "name": "Home slideshow 6",
+            "code": "ocslideshow"
+        },
+        {
+            "id": "215",
+            "name": "Horizontal Menu 01",
+            "code": "ocmegamenu"
+        },
+        {
+            "id": "32",
+            "name": "Layout Homepage 01",
+            "code": "oc_page_builder"
+        },
+        {
+            "id": "48",
+            "name": "Layout Homepage 02",
+            "code": "oc_page_builder"
+        },
+        {
+            "id": "53",
+            "name": "Layout Homepage 03",
+            "code": "oc_page_builder"
+        },
+        {
+            "id": "58",
+            "name": "Layout Homepage 04",
+            "code": "oc_page_builder"
+        },
+        {
+            "id": "553",
+            "name": "Layout Homepage 05",
+            "code": "oc_page_builder"
+        },
+        {
+            "id": "558",
+            "name": "Layout Homepage 06",
+            "code": "oc_page_builder"
+        },
+        {
+            "id": "218",
+            "name": "Mobile Menu 01",
+            "code": "ocmegamenu"
+        },
+        {
+            "id": "538",
+            "name": "Most view products 02",
+            "code": "ocproduct"
+        },
+        {
+            "id": "554",
+            "name": "Most view products 05",
+            "code": "ocproduct"
+        },
+        {
+            "id": "547",
+            "name": "New Arrivals Tabs product 05",
+            "code": "octabproducts"
+        },
+        {
+            "id": "529",
+            "name": "New Products 01",
+            "code": "ocproduct"
+        },
+        {
+            "id": "539",
+            "name": "New Products 03",
+            "code": "ocproduct"
+        },
+        {
+            "id": "40",
+            "name": "Newsletter",
+            "code": "newslettersubscribe"
+        },
+        {
+            "id": "39",
+            "name": "Newsletter Popup",
+            "code": "newslettersubscribe"
+        },
+        {
+            "id": "533",
+            "name": "Payment",
+            "code": "occmsblock"
+        },
+        {
+            "id": "396",
+            "name": "Policy Block",
+            "code": "occmsblock"
+        },
+        {
+            "id": "446",
+            "name": "Social",
+            "code": "occmsblock"
+        },
+        {
+            "id": "537",
+            "name": "Special products 02",
+            "code": "ocproduct"
+        },
+        {
+            "id": "551",
+            "name": "Static Bottom Store5",
+            "code": "occmsblock"
+        },
+        {
+            "id": "361",
+            "name": "Static Middle Store1",
+            "code": "occmsblock"
+        },
+        {
+            "id": "535",
+            "name": "Static Middle Store2",
+            "code": "occmsblock"
+        },
+        {
+            "id": "540",
+            "name": "Static Middle Store3",
+            "code": "occmsblock"
+        },
+        {
+            "id": "544",
+            "name": "Static Middle1 Store4",
+            "code": "occmsblock"
+        },
+        {
+            "id": "545",
+            "name": "Static Middle2 Store4",
+            "code": "occmsblock"
+        },
+        {
+            "id": "452",
+            "name": "Static Sidebar",
+            "code": "occmsblock"
+        },
+        {
+            "id": "360",
+            "name": "Static Top Store1",
+            "code": "occmsblock"
+        },
+        {
+            "id": "556",
+            "name": "Static1 Store6",
+            "code": "occmsblock"
+        },
+        {
+            "id": "557",
+            "name": "Static2 Store6",
+            "code": "occmsblock"
+        },
+        {
+            "id": "546",
+            "name": "Tabs Categories 05",
+            "code": "octabproducts"
+        },
+        {
+            "id": "414",
+            "name": "Testimonials 01",
+            "code": "octestimonial"
+        }
+    ],
+    "users": {
+        "admin_count": "4",
+        "customer_count": "122"
+    },
+    "products": {
+        "disabled": "85",
+        "enabled": "16"
+    },
+    "orders": {
+        "total": "479",
+        "by_status": {
+            "0": "220",
+            "5": "258",
+            "1": "1"
+        }
+    },
+    "events": [
+        {
+            "trigger": "admin\/controller\/*\/after",
+            "action": "extension\/payment\/squareup\/setAdminURL",
+            "sort_order": "0"
+        },
+        {
+            "trigger": "admin\/model\/catalog\/product\/addProduct\/after",
+            "action": "extension\/purpletree_multivendor\/events\/addShippingCharge",
+            "sort_order": "0"
+        },
+        {
+            "trigger": "admin\/model\/catalog\/product\/editProduct\/after",
+            "action": "extension\/purpletree_multivendor\/events\/editShippingCharge",
+            "sort_order": "0"
+        },
+        {
+            "trigger": "admin\/model\/customer\/customer\/addReward\/after",
+            "action": "mail\/reward",
+            "sort_order": "0"
+        },
+        {
+            "trigger": "admin\/model\/customer\/customer\/addTransaction\/after",
+            "action": "mail\/transaction",
+            "sort_order": "0"
+        },
+        {
+            "trigger": "admin\/model\/customer\/customer_approval\/approveAffiliate\/after",
+            "action": "mail\/affiliate\/approve",
+            "sort_order": "0"
+        },
+        {
+            "trigger": "admin\/model\/customer\/customer_approval\/approveCustomer\/after",
+            "action": "mail\/customer\/approve",
+            "sort_order": "0"
+        },
+        {
+            "trigger": "admin\/model\/customer\/customer_approval\/denyAffiliate\/after",
+            "action": "mail\/affiliate\/deny",
+            "sort_order": "0"
+        },
+        {
+            "trigger": "admin\/model\/customer\/customer_approval\/denyCustomer\/after",
+            "action": "mail\/customer\/deny",
+            "sort_order": "0"
+        },
+        {
+            "trigger": "admin\/model\/sale\/return\/addReturn\/after",
+            "action": "mail\/return",
+            "sort_order": "0"
+        },
+        {
+            "trigger": "admin\/model\/user\/user\/editCode\/after",
+            "action": "mail\/forgotten",
+            "sort_order": "0"
+        },
+        {
+            "trigger": "admin\/view\/catalog\/product_form\/before",
+            "action": "extension\/payment\/squareup\/setProductWarning",
+            "sort_order": "0"
+        },
+        {
+            "trigger": "admin\/view\/common\/column_left\/before",
+            "action": "extension\/payment\/squareup\/setAdminLink",
+            "sort_order": "0"
+        },
+        {
+            "trigger": "catalog\/controller\/account\/logout\/after",
+            "action": "extension\/module\/amazon_login\/logout",
+            "sort_order": "0"
+        },
+        {
+            "trigger": "catalog\/controller\/account\/logout\/after",
+            "action": "extension\/module\/amazon_pay\/logout",
+            "sort_order": "0"
+        },
+        {
+            "trigger": "catalog\/controller\/checkout\/checkout\/before",
+            "action": "extension\/payment\/pp_express\/eventLoadCheckoutJs",
+            "sort_order": "0"
+        },
+        {
+            "trigger": "catalog\/controller\/common\/header\/after",
+            "action": "extension\/account\/purpletree_multivendor\/events\/beforeheader",
+            "sort_order": "0"
+        },
+        {
+            "trigger": "catalog\/model\/account\/address\/addAddress\/after",
+            "action": "event\/activity\/addAddress",
+            "sort_order": "0"
+        },
+        {
+            "trigger": "catalog\/model\/account\/address\/deleteAddress\/after",
+            "action": "event\/activity\/deleteAddress",
+            "sort_order": "0"
+        },
+        {
+            "trigger": "catalog\/model\/account\/address\/editAddress\/after",
+            "action": "event\/activity\/editAddress",
+            "sort_order": "0"
+        },
+        {
+            "trigger": "catalog\/model\/account\/customer\/addAffiliate\/after",
+            "action": "event\/activity\/addAffiliate",
+            "sort_order": "0"
+        },
+        {
+            "trigger": "catalog\/model\/account\/customer\/addAffiliate\/after",
+            "action": "mail\/affiliate",
+            "sort_order": "0"
+        },
+        {
+            "trigger": "catalog\/model\/account\/customer\/addAffiliate\/after",
+            "action": "mail\/affiliate\/alert",
+            "sort_order": "0"
+        },
+        {
+            "trigger": "catalog\/model\/account\/customer\/addCustomer\/after",
+            "action": "event\/activity\/addCustomer",
+            "sort_order": "0"
+        },
+        {
+            "trigger": "catalog\/model\/account\/customer\/addCustomer\/after",
+            "action": "mail\/register\/alert",
+            "sort_order": "0"
+        },
+        {
+            "trigger": "catalog\/model\/account\/customer\/addCustomer\/after",
+            "action": "mail\/register",
+            "sort_order": "0"
+        },
+        {
+            "trigger": "catalog\/model\/account\/customer\/addTransaction\/after",
+            "action": "mail\/transaction",
+            "sort_order": "0"
+        },
+        {
+            "trigger": "catalog\/model\/account\/customer\/addTransaction\/after",
+            "action": "event\/activity\/addTransaction",
+            "sort_order": "0"
+        },
+        {
+            "trigger": "catalog\/model\/account\/customer\/deleteLoginAttempts\/after",
+            "action": "event\/activity\/login",
+            "sort_order": "0"
+        },
+        {
+            "trigger": "catalog\/model\/account\/customer\/editAffiliate\/after",
+            "action": "event\/activity\/editAffiliate",
+            "sort_order": "0"
+        },
+        {
+            "trigger": "catalog\/model\/account\/customer\/editCode\/after",
+            "action": "mail\/forgotten",
+            "sort_order": "0"
+        },
+        {
+            "trigger": "catalog\/model\/account\/customer\/editCode\/after",
+            "action": "event\/activity\/forgotten",
+            "sort_order": "0"
+        },
+        {
+            "trigger": "catalog\/model\/account\/customer\/editCustomer\/after",
+            "action": "event\/activity\/editCustomer",
+            "sort_order": "0"
+        },
+        {
+            "trigger": "catalog\/model\/account\/customer\/editPassword\/after",
+            "action": "event\/activity\/editPassword",
+            "sort_order": "0"
+        },
+        {
+            "trigger": "catalog\/model\/account\/return\/addReturn\/after",
+            "action": "event\/statistics\/addReturn",
+            "sort_order": "0"
+        },
+        {
+            "trigger": "catalog\/model\/account\/return\/addReturn\/after",
+            "action": "event\/activity\/addReturn",
+            "sort_order": "0"
+        },
+        {
+            "trigger": "catalog\/model\/catalog\/product\/getBestSellerProducts\/after",
+            "action": "extension\/account\/purpletree_multivendor\/events\/getFilterLatestProducts",
+            "sort_order": "0"
+        },
+        {
+            "trigger": "catalog\/model\/catalog\/product\/getLatestProducts\/after",
+            "action": "extension\/account\/purpletree_multivendor\/events\/getFilterLatestProducts",
+            "sort_order": "0"
+        },
+        {
+            "trigger": "catalog\/model\/catalog\/product\/getProduct\/after",
+            "action": "extension\/account\/purpletree_multivendor\/events\/getFilterProduct",
+            "sort_order": "0"
+        },
+        {
+            "trigger": "catalog\/model\/catalog\/product\/getProducts\/after",
+            "action": "extension\/account\/purpletree_multivendor\/events\/getFilterProducts",
+            "sort_order": "0"
+        },
+        {
+            "trigger": "catalog\/model\/catalog\/product\/getProductSpecials\/after",
+            "action": "extension\/account\/purpletree_multivendor\/events\/getFilterLatestProducts",
+            "sort_order": "0"
+        },
+        {
+            "trigger": "catalog\/model\/catalog\/product\/getTotalProducts\/after",
+            "action": "extension\/account\/purpletree_multivendor\/events\/getFilterTotalProducts",
+            "sort_order": "0"
+        },
+        {
+            "trigger": "catalog\/model\/catalog\/review\/addReview\/after",
+            "action": "event\/statistics\/addReview",
+            "sort_order": "0"
+        },
+        {
+            "trigger": "catalog\/model\/checkout\/order\/addOrderHistory\/after",
+            "action": "event\/statistics\/addOrderHistory",
+            "sort_order": "0"
+        },
+        {
+            "trigger": "catalog\/model\/checkout\/order\/addOrderHistory\/after",
+            "action": "extension\/payment\/amazon_login_pay\/capture",
+            "sort_order": "0"
+        },
+        {
+            "trigger": "catalog\/model\/checkout\/order\/addOrderHistory\/after",
+            "action": "extension\/payment\/squareup\/afterAddOrderHistory",
+            "sort_order": "0"
+        },
+        {
+            "trigger": "catalog\/model\/checkout\/order\/addOrderHistory\/after",
+            "action": "extension\/total\/voucher\/send",
+            "sort_order": "0"
+        },
+        {
+            "trigger": "catalog\/model\/checkout\/order\/addOrderHistory\/before",
+            "action": "extension\/payment\/squareup\/beforeAddOrderHistory",
+            "sort_order": "0"
+        },
+        {
+            "trigger": "catalog\/model\/checkout\/order\/addOrderHistory\/before",
+            "action": "event\/activity\/addOrderHistory",
+            "sort_order": "0"
+        },
+        {
+            "trigger": "catalog\/model\/checkout\/order\/addOrderHistory\/before",
+            "action": "mail\/order",
+            "sort_order": "0"
+        },
+        {
+            "trigger": "catalog\/model\/checkout\/order\/addOrderHistory\/before",
+            "action": "mail\/order\/alert",
+            "sort_order": "0"
+        },
+        {
+            "trigger": "catalog\/model\/checkout\/order\/editOrder\/after",
+            "action": "extension\/payment\/amazon_login_pay\/capture",
+            "sort_order": "0"
+        },
+        {
+            "trigger": "catalog\/model\/journal3\/filter\/getProducts\/after",
+            "action": "extension\/account\/purpletree_multivendor\/events\/getFilterProducts",
+            "sort_order": "0"
+        }
+    ]
+}

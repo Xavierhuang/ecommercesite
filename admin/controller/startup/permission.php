@@ -25,6 +25,7 @@ class ControllerStartupPermission extends Controller {
 				'extension/fraud',
 				'extension/module',
 				'extension/payment',
+				'extension/purpletree_multivendor',
 				'extension/shipping',
 				'extension/theme',
 				'extension/total',
@@ -35,6 +36,8 @@ class ControllerStartupPermission extends Controller {
 			if (isset($part[2]) && in_array($route, $extension)) {
 				$route .= '/' . $part[2];
 			}
+
+			$route = strtolower($route);
 
 			// We want to ingore some pages from having its permission checked.
 			$ignore = array(

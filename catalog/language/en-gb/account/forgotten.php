@@ -17,5 +17,6 @@ $_['entry_confirm']   = 'Confirm';
 // Error
 $_['error_email']     = 'Warning: The E-Mail Address was not found in our records, please try again!';
 $_['error_approved']  = 'Warning: Your account requires approval before you can login.';
+$_['error_mail']      = 'We could not send the email. Use the reset link in storage/logs/forgotten_password_reset.log (latest line). To fix mail: Admin > System > Settings > Mail, use Gmail App Password if 2FA is on.';
 $_['error_password']  = 'Password must be between 4 and 20 characters!';
 $_['error_confirm']   = 'Password and password confirmation do not match!';

@@ -2,6 +2,8 @@
 namespace Cart;
 class Currency {
 	private $currencies = array();
+	private $db;
+	private $language;
 
 	public function __construct($registry) {
 		$this->db = $registry->get('db');

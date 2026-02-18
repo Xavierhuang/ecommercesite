@@ -117,3 +117,14 @@ CREATE TABLE IF NOT EXISTS `oc_customer_tax_exemption_log` (
   PRIMARY KEY (`log_id`),
   KEY `idx_exemption` (`exemption_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- Stripe Account Link (pending onboarding return)
+CREATE TABLE IF NOT EXISTS `oc_stripe_account_link_pending` (
+  `token` varchar(64) NOT NULL,
+  `seller_id` int(11) NOT NULL,
+  `account_id` varchar(128) NOT NULL,
+  `livemode` tinyint(1) NOT NULL DEFAULT 0,
+  `created_at` datetime NOT NULL,
+  PRIMARY KEY (`token`),
+  KEY `idx_seller` (`seller_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;

@@ -10,6 +10,7 @@ CREATE TABLE IF NOT EXISTS `session` (
 namespace Session;
 final class DB {
 	public $expire = '';
+	private $db;
 	
 	public function __construct($registry) {
 		$this->db = $registry->get('db');

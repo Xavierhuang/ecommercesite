@@ -508,16 +508,8 @@ class ControllerExtensionPaymentPPAdaptive extends Controller {
 							$catids =$this->getProductCategory($productid );
 							$commission_cat = array();
 							$catttt = array();
+							// Business rule: commission on product amounts only, excluding shipping (and taxes)
 							$shippingcommision = 0;
-							
-							if($totalshipingorder != 0) {
-								if (null !== $this->config->get('module_purpletree_multivendor_shipping_commission')) {
-									if(!array_key_exists($sellerorder['seller_id'],$dsdsds)) {
-										$shippingcommision = (($this->config->get('module_purpletree_multivendor_shipping_commission')*$totalshipingorder)/100);
-										$dsdsds[$sellerorder['seller_id']] = $shippingcommision;
-									}
-								}
-							}
 								
 							if(!empty($catids)){
 								foreach($catids as $cat) {

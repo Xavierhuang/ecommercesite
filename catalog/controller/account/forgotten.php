@@ -17,32 +17,20 @@ class ControllerAccountForgotten extends Controller {
 			$code = token(40);
 			$this->model_account_customer->editCode($this->request->post['email'], $code);
 
-			// Send password reset email
-			$customer_info = $this->model_account_customer->getCustomerByEmail($this->request->post['email']);
-			
-			if ($customer_info) {
-				$this->load->language('mail/forgotten');
-				
-				$subject = sprintf($this->language->get('text_subject'), html_entity_decode($this->config->get('config_name'), ENT_QUOTES, 'UTF-8'));
-				
-				$message = sprintf($this->language->get('text_greeting'), html_entity_decode($this->config->get('config_name'), ENT_QUOTES, 'UTF-8')) . "\n\n";
-				$message .= $this->language->get('text_reset') . "\n\n";
-				$message .= $this->url->link('account/reset', 'code=' . $code, true) . "\n\n";
-				$message .= sprintf($this->language->get('text_ip'), $this->request->server['REMOTE_ADDR']) . "\n\n";
-				
-				$mail = new Mail($this->config->get('config_mail_engine'));
-				$mail->parameter = $this->config->get('config_mail_parameter');
-				$mail->setTo($this->request->post['email']);
-				$mail->setFrom($this->config->get('config_email'));
-				$mail->setSender(html_entity_decode($this->config->get('config_name'), ENT_QUOTES, 'UTF-8'));
-				$mail->setSubject($subject);
-				$mail->setText($message);
-				$mail->send();
+			// Reset email is sent by the event (ControllerMailForgotten). Log reset link for support when mail fails.
+			if (defined('DIR_LOGS') && DIR_LOGS) {
+				$log_file = DIR_LOGS . 'forgotten_password_reset.log';
+				$log_url = str_replace('&amp;', '&', $this->url->link('account/reset', 'code=' . $code, true));
+				file_put_contents($log_file, date('Y-m-d H:i:s') . ' ' . $this->request->post['email'] . ' ' . $log_url . "\n", FILE_APPEND | LOCK_EX);
 			}
 
-			$this->session->data['success'] = $this->language->get('text_success');
-
-			$this->response->redirect($this->url->link('account/login', '', true));
+			if (empty($this->session->data['forgotten_mail_error'])) {
+				$this->session->data['success'] = $this->language->get('text_success');
+				$this->response->redirect($this->url->link('account/login', '', true));
+			} else {
+				unset($this->session->data['forgotten_mail_error']);
+				$this->error['warning'] = $this->language->get('error_mail');
+			}
 		}
 
 		$data['breadcrumbs'] = array();

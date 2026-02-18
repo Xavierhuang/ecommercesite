@@ -387,7 +387,7 @@ class ModelExtensionPurpletreeMultivendorSellerorder extends Model{
 			return $query->row['total'];
 		}
 		
-		public function addOrderHistory($order_id, $seller_id, $order_status_id, $comment = '', $notify = false, $override = false) {
+		public function addOrderHistory($order_id, $seller_id, $order_status_id, $comment = '', $notify = false, $override = false, $notify_buyer = true) {
 			$order_info = $this->getOrder($order_id,$seller_id);
 			
 			if ($order_info) { 
@@ -473,52 +473,51 @@ class ModelExtensionPurpletreeMultivendorSellerorder extends Model{
 				
 				$this->db->query("INSERT INTO " . DB_PREFIX . "purpletree_vendor_orders_history SET order_id = '" . (int)$order_id . "', seller_id ='". (int)$seller_id ."', order_status_id = '" . (int)$order_status_id . "', notify = '" . (int)$notify . "', comment = '" . $this->db->escape($comment) . "', created_at = NOW()");
 				
-				/* $order_product_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "order_product WHERE order_id = '" . (int)$order_id . "'");
-					$this->db->query("DELETE FROM " . DB_PREFIX . "purpletree_vendor_commissions WHERE order_id = '" . (int)$order_id . "'");
-					foreach ($order_product_query->rows as $order_product) {
-					
-					if($order_status_id == 7 || $order_status_id == 8 || $order_status_id == 9 || $order_status_id == 10 || $order_status_id == 11 || $order_status_id == 12 || $order_status_id == 13 || $order_status_id == 14 || $order_status_id == 16) {
-					
-                    $this->db->query("UPDATE " . DB_PREFIX . "purpletree_vendor_commissions SET commission = '0', status = 'Order Cancelled', updated_at = NOW() WHERE order_id = '" . (int)$order_id . "'  AND product_id = '" . (int)$order_product['product_id'] . "'");
+				// Commission on product only (order_product total); no shipping — set commission_shipping = 0
+				$order_product_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "order_product WHERE order_id = '" . (int)$order_id . "'");
+				$this->db->query("DELETE FROM " . DB_PREFIX . "purpletree_vendor_commissions WHERE order_id = '" . (int)$order_id . "'");
+				foreach ($order_product_query->rows as $order_product) {
+					if ($order_status_id == 7 || $order_status_id == 8 || $order_status_id == 9 || $order_status_id == 10 || $order_status_id == 11 || $order_status_id == 12 || $order_status_id == 13 || $order_status_id == 14 || $order_status_id == 16) {
+						$this->db->query("UPDATE " . DB_PREFIX . "purpletree_vendor_commissions SET commission = '0', status = 'Order Cancelled', updated_at = NOW() WHERE order_id = '" . (int)$order_id . "'  AND product_id = '" . (int)$order_product['product_id'] . "'");
 					} else {
-					$seller_id = $this->db->query("SELECT pvp.seller_id,pvs.store_shipping_charge,pvs.store_commission, p.tax_class_id FROM " . DB_PREFIX . "purpletree_vendor_products pvp JOIN " . DB_PREFIX . "purpletree_vendor_stores pvs ON(pvs.seller_id=pvp.seller_id) JOIN " . DB_PREFIX . "product p ON(p.product_id=pvp.product_id) WHERE pvp.product_id='".(int)$order_product['product_id']."' AND pvp.is_approved=1")->row;
-					if(!empty($seller_id['seller_id'])) {
-					//category_commission
-					$productid = $order_product['product_id'];	
-					$catids =$this->getProductCategory($productid );
-					$commission_cat = array();
-					$catttt = array();
-					if(!empty($catids)){
-					foreach($catids as $cat) {
-					$sql = "SELECT commission FROM " . DB_PREFIX . "purpletree_vendor_categories_commission where 	category_id = '".(int)$cat['category_id']."'";
-					$query = $this->db->query($sql);
-					$commission_cat[] = $query->row;
+						$seller_row = $this->db->query("SELECT pvp.seller_id,pvs.store_shipping_charge,pvs.store_commission, p.tax_class_id FROM " . DB_PREFIX . "purpletree_vendor_products pvp JOIN " . DB_PREFIX . "purpletree_vendor_stores pvs ON(pvs.seller_id=pvp.seller_id) JOIN " . DB_PREFIX . "product p ON(p.product_id=pvp.product_id) WHERE pvp.product_id='".(int)$order_product['product_id']."' AND pvp.is_approved=1")->row;
+						if (!empty($seller_row['seller_id'])) {
+							$productid = $order_product['product_id'];
+							$catids = $this->getProductCategory($productid);
+							$commission_cat = array();
+							$catttt = array();
+							$commission_percent = 0;
+							if (!empty($catids)) {
+								foreach ($catids as $cat) {
+									$sql = "SELECT commission FROM " . DB_PREFIX . "purpletree_vendor_categories_commission where category_id = '".(int)$cat['category_id']."'";
+									$query = $this->db->query($sql);
+									$commission_cat[] = $query->row;
+								}
+							}
+							if (!empty($commission_cat)) {
+								foreach ($commission_cat as $catt) {
+									if (isset($catt['commission'])) {
+										$catttt[] = $catt['commission'];
+									}
+								}
+							}
+							if (!empty($catttt)) {
+								$final_cat_commison = max($catttt);
+							}
+							if (isset($final_cat_commison)) {
+								$commission_percent = (float)$final_cat_commison;
+								$commission = ($order_product['total'] * $final_cat_commison) / 100;
+							} elseif (!empty($seller_row['store_commission']) && $seller_row['store_commission'] > 0) {
+								$commission_percent = (float)$seller_row['store_commission'];
+								$commission = ($order_product['total'] * $seller_row['store_commission']) / 100;
+							} else {
+								$commission_percent = (float)$this->config->get('module_purpletree_multivendor_commission');
+								$commission = ($order_product['total'] * $this->config->get('module_purpletree_multivendor_commission')) / 100;
+							}
+							$this->db->query("INSERT INTO " . DB_PREFIX . "purpletree_vendor_commissions SET order_id = '" . (int)$order_id . "', product_id = '" . (int)$order_product['product_id'] . "', seller_id = '" . (int)$seller_row['seller_id'] . "', commission_fixed = '0', commission_percent = '" . (float)$commission_percent . "', commission_shipping = '0', commission = '" . (float)$commission . "', status = 'Pending', created_at = NOW(), updated_at = NOW()");
+						}
 					}
-					
-					}	
-					if(!empty($commission_cat)) {
-					foreach($commission_cat as $catt) {
-					if(isset($catt['commission'])) {
-					$catttt[] = $catt['commission'];
-					}
-					}
-					}	
-					if(!empty($catttt)) {
-					$final_cat_commison = max($catttt);
-					}
-					if(isset($final_cat_commison)) {
-					$commission = ($order_product['total']*$final_cat_commison)/100;
-					}
-					//category_commission
-					elseif($seller_id['store_commission'] > 0){
-					$commission = ($order_product['total']*$seller_id['store_commission'])/100;
-					} else {
-					$commission = ($order_product['total']*$this->config->get('module_purpletree_multivendor_commission'))/100;
-					}
-					$this->db->query("INSERT INTO " . DB_PREFIX . "purpletree_vendor_commissions SET order_id = '" . (int)$order_id . "', product_id ='".(int)$order_product['product_id']."', seller_id = '" . (int)$seller_id['seller_id'] . "', commission = '" . (float)$commission . "', status = 'Pending', created_at = NOW(), updated_at = NOW()");
-					}
-					}
-				} */
+				}
 				
 				// If old order status is the processing or complete status but new status is not then commence restock, and remove coupon, voucher and reward history
 				if (in_array($order_info['order_status_id'], array_merge($this->config->get('config_processing_status'), $this->config->get('config_complete_status'))) && !in_array($order_status_id, array_merge($this->config->get('config_processing_status'), $this->config->get('config_complete_status')))) {
@@ -943,11 +942,12 @@ class ModelExtensionPurpletreeMultivendorSellerorder extends Model{
 								'_COMMENT_'=>$p_comment,
 								);
 	
-								
-		$reciver=$order_info['email'];
-		$subject = $this->model_extension_purpletree_multivendor_vendor->getmsgfromarray($mail_subject_vars,$getTemplate['new_subject']);
-		$message = $this->model_extension_purpletree_multivendor_vendor->getmsgfromarray($mail_msg_vars,$getTemplate['new_message']);
-		$this->model_extension_purpletree_multivendor_vendor->ptsSendMail($reciver,$subject,$message);
+		if ($notify_buyer) {
+			$reciver=$order_info['email'];
+			$subject = $this->model_extension_purpletree_multivendor_vendor->getmsgfromarray($mail_subject_vars,$getTemplate['new_subject']);
+			$message = $this->model_extension_purpletree_multivendor_vendor->getmsgfromarray($mail_msg_vars,$getTemplate['new_message']);
+			$this->model_extension_purpletree_multivendor_vendor->ptsSendMail($reciver,$subject,$message);
+		}
 
 					
 					// Seller mail

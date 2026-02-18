@@ -28,5 +28,37 @@ class ModelExtensionPurpletreeMultivendorStripeconnect extends Controller {
             $query = $this->db->query("SELECT account_id FROM " . DB_PREFIX ."purpletree_stripe_account WHERE seller_id = '" .(int)$seller_id . "'");
             return $query->num_rows ? $query->row['account_id'] : null;
         }
+
+        public function ensureStripeAccountLinkPendingTable() {
+            $this->db->query("CREATE TABLE IF NOT EXISTS `" . DB_PREFIX . "stripe_account_link_pending` (
+                `token` varchar(64) NOT NULL,
+                `seller_id` int(11) NOT NULL,
+                `account_id` varchar(128) NOT NULL,
+                `livemode` tinyint(1) NOT NULL DEFAULT 0,
+                `created_at` datetime NOT NULL,
+                PRIMARY KEY (`token`),
+                KEY `idx_seller` (`seller_id`)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8");
+        }
+
+        public function insertPendingAccountLink($seller_id, $account_id, $livemode, $token) {
+            $this->ensureStripeAccountLinkPendingTable();
+            $this->db->query("INSERT INTO " . DB_PREFIX . "stripe_account_link_pending SET
+                token = '" . $this->db->escape($token) . "',
+                seller_id = '" . (int)$seller_id . "',
+                account_id = '" . $this->db->escape($account_id) . "',
+                livemode = '" . (int)$livemode . "',
+                created_at = NOW()");
+        }
+
+        public function getPendingByToken($token) {
+            $this->ensureStripeAccountLinkPendingTable();
+            $q = $this->db->query("SELECT seller_id, account_id, livemode FROM " . DB_PREFIX . "stripe_account_link_pending WHERE token = '" . $this->db->escape($token) . "' LIMIT 1");
+            return $q->num_rows ? $q->row : null;
+        }
+
+        public function deletePendingByToken($token) {
+            $this->db->query("DELETE FROM " . DB_PREFIX . "stripe_account_link_pending WHERE token = '" . $this->db->escape($token) . "'");
+        }
 }
 ?>

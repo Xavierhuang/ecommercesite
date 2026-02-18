@@ -11,11 +11,24 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <title>{{ title }}</title>
 <base href="{{ base }}" />
+<meta name="robots" content="{{ robots }}" />
 {% if description %}
-<meta name="description" content="{{ description }}" />
+<meta name="description" content="{{ description|e('html_attr') }}" />
 {% endif %}
 {% if keywords %}
-<meta name="keywords" content="{{ keywords }}" />
+<meta name="keywords" content="{{ keywords|e('html_attr') }}" />
+{% endif %}
+{% if og_title %}
+<meta property="og:title" content="{{ og_title|e('html_attr') }}" />
+<meta property="og:description" content="{{ og_description|default('')|e('html_attr') }}" />
+<meta property="og:type" content="{{ og_type }}" />
+<meta property="og:url" content="{{ og_url }}" />
+{% if og_image %}<meta property="og:image" content="{{ og_image }}" />{% endif %}
+<meta property="og:site_name" content="{{ og_site_name|e('html_attr') }}" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="{{ og_title|e('html_attr') }}" />
+<meta name="twitter:description" content="{{ og_description|default('')|e('html_attr') }}" />
+{% if og_image %}<meta name="twitter:image" content="{{ og_image }}" />{% endif %}
 {% endif %}
 <script src="catalog/view/javascript/jquery/jquery-2.1.1.min.js" type="text/javascript"></script>
 <link href="catalog/view/javascript/bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen" />
@@ -37,6 +50,9 @@
 {% for analytic in analytics %}
 {{ analytic }}
 {% endfor %}
+{% if analytics_helper_html %}
+{{ analytics_helper_html|raw }}
+{% endif %}
 </head>
 <body>
 <nav id="top">

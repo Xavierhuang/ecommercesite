@@ -39,7 +39,7 @@
 							<div class=" pts-col-md-7 pts-pull-left-1 p-0">
 								<p class="new-seller-login-here"><span class="login-seller"><i
 											class="fa fa-user-o fa-users"></i> {{ text_new_customer_register }}
-									</span><a href="{{ sellerlogin }}" class="ptsc-sregister-sellog"> {{
+									</span><a href="{{ sellerlogin }}" class="ptsc-sregister-sellog" id="pts-seller-login-link" data-seller-login-url="{{ sellerlogin }}"> {{
 										text_seller_login1 }} </a><span></span></p>
 							</div>
 							<div class=" pts-col-md-5  pts-pull-right-1 p-0">
@@ -1347,6 +1347,25 @@
 	var currentTabpts = 1; // Current tab is set to be the first tab (0)
 	showTabpts(currentTabpts);
 	{% endif %}
+	// Ensure seller login link always navigates (avoids form/script blocking)
+	(function() {
+		var sellerLoginUrl = "{{ sellerlogin|e('js') }}";
+		document.addEventListener('click', function(e) {
+			var t = e.target;
+			while (t && t !== document) {
+				if (t.matches && t.matches('a.ptsc-sregister-sellog')) {
+					var href = (t.getAttribute('href') || t.getAttribute('data-seller-login-url') || sellerLoginUrl || '').trim();
+					if (href && href !== '#') {
+						e.preventDefault();
+						e.stopPropagation();
+						window.location.href = href;
+					}
+					return;
+				}
+				t = t.parentElement;
+			}
+		}, true);
+	})();
 	// Display the crurrent tab
 
 	function showTabpts(n) {
@@ -1395,7 +1414,22 @@
 		// This function will figure out which tab to display
 		var x = document.getElementsByClassName("tab");
 		// Exit the function if any field in the current tab is invalid:
-		if (n == 1 && !validateForm(currentTabpts)) return false;
+		if (n == 1 && !validateForm(currentTabpts)) {
+			var validator = $("#regForm").validate();
+			if (validator && validator.errorList && validator.errorList.length > 0) {
+				var firstError = validator.errorList[0];
+				var el = firstError.element;
+				var tabs = document.getElementsByClassName("tab");
+				for (var i = 0; i < tabs.length; i++) {
+					if (tabs[i].contains(el)) {
+						showTabpts(i);
+						break;
+					}
+				}
+				$(el).focus();
+			}
+			return false;
+		}
 
 		// Hide the current tab:
 		x[currentTabpts].style.display = "none";

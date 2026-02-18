@@ -190,6 +190,7 @@ class ControllerCommonFileManager extends Controller {
 
 	public function upload() {
 		$this->load->language('common/filemanager');
+		$this->load->model('tool/image');
 
 		$json = array();
 
@@ -272,37 +273,41 @@ class ControllerCommonFileManager extends Controller {
 
 					// Check file size (10MB limit)
 					if ($file['size'] > 10485760) {
-						$json['error'] = 'File size exceeds maximum allowed size of 10MB';
+						$json['error'] = $this->language->get('error_filesize');
 					}
 
 					// Return any upload error
 					if ($file['error'] != UPLOAD_ERR_OK) {
-						$json['error'] = $this->language->get('error_upload_' . $file['error']);
+						$err_msg = $this->language->get('error_upload_' . $file['error']);
+						$json['error'] = (strpos($err_msg, 'error_upload_') === 0) ? $this->language->get('error_upload') : $err_msg;
 					}
 				} else {
 					$json['error'] = $this->language->get('error_upload');
 				}
 
-				if (!$json) {
+				if (!isset($json['error'])) {
 					$destination = $directory . '/' . $filename;
-					
+
 					if (!move_uploaded_file($file['tmp_name'], $destination)) {
-						$json['error'] = 'Failed to move uploaded file to destination';
+						$json['error'] = $this->language->get('error_upload_move');
 					} else {
-						// Set proper permissions
 						chmod($destination, 0644);
+						// Return path so image appears in list and can be attached on first attempt (scope 2.1)
+						$relative = utf8_substr($destination, utf8_strlen(DIR_IMAGE));
+						$json['path'] = $relative;
+						$json['thumb'] = $this->model_tool_image->resize($relative, 100, 100);
 					}
+					break;
 				}
 			}
 		}
 
-		if (!$json) {
+		if (!isset($json['error'])) {
 			$json['success'] = $this->language->get('text_uploaded');
 		}
 
-		// Clear image cache for immediate visibility
-		if (isset($this->cache)) {
-			$this->cache->delete('image');
+		if (isset($this->registry) && $this->registry->get('cache')) {
+			$this->registry->get('cache')->delete('image');
 		}
 
 		$this->response->addHeader('Content-Type: application/json');

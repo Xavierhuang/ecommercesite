@@ -24,6 +24,29 @@
 		{% endif %}
       </div>
   </div>
+
+			{% if onboarding_steps is defined and onboarding_steps|length > 0 %}
+			<div class="panel panel-default pts-col-md-12" style="margin-bottom:20px;">
+				<div class="panel-heading"><strong>Onboarding progress</strong></div>
+				<div class="panel-body">
+					<ul class="list-unstyled" style="margin:0;">
+						{% for step in onboarding_steps %}
+						<li style="margin-bottom:8px;">
+							{% if step.done %}
+							<span style="color:green;">&#10003;</span>
+							{% else %}
+							<span style="color:#999;">&#9633;</span>
+							{% endif %}
+							{{ step.label }}
+							{% if not step.done and step.link %}
+							<a href="{{ step.link }}">Complete</a>
+							{% endif %}
+						</li>
+						{% endfor %}
+					</ul>
+				</div>
+			</div>
+			{% endif %}
 		
 			<div class="">
 				<div class="pts-col-md-12 pts-col-xs-12 ">
@@ -245,10 +268,16 @@
 							{% endif %}
 							<div class="icons-text">{{ text_sellercoupons }}</div></a><br>
 {% if stripe_status %}
-					<!--- Stripe connect---->	
-							{{ a_href }}
+					<!--- Stripe connect ---->
+							{% if stripe_connect_eligible is defined and stripe_connect_eligible %}
+							{{ a_href|raw }}
 							<img src="image/catalog/dashboardicon/stripe.png"  class="sellerAccountImg"/>
-							<div class="icons-text">{{ text_stripe_connect }}</div>{{ a }}<br>
+							<div class="icons-text">{{ text_stripe_connect }}</div>{{ a|raw }}
+							{% else %}
+							<span class="pts-stripe-connect-disabled"><img src="image/catalog/dashboardicon/stripe.png"  class="sellerAccountImg"/>
+							<div class="icons-text">{{ text_stripe_connect_required|default('Complete store and get approved first to connect Stripe.') }}</div></span>
+							{% endif %}
+							<br>
 						{% endif %}
 
                         	<!--- Stripe connect---->		

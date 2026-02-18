@@ -10,6 +10,7 @@ class ControllerAccountRegister extends Controller {
 		$this->load->language('account/register');
 
 		$this->document->setTitle($this->language->get('heading_title'));
+		$this->document->setRobots('noindex, nofollow');
 
 		$this->document->addScript('catalog/view/javascript/jquery/datetimepicker/moment/moment.min.js');
 		$this->document->addScript('catalog/view/javascript/jquery/datetimepicker/moment/moment-with-locales.min.js');
@@ -20,6 +21,33 @@ class ControllerAccountRegister extends Controller {
 
 		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
 			$customer_id = $this->model_account_customer->addCustomer($this->request->post);
+
+			// Reseller certificate upload (scope 2.3(E)): optional at signup for tax exemption
+			if (!empty($_FILES['reseller_certificate']['name']) && is_uploaded_file($_FILES['reseller_certificate']['tmp_name'])) {
+				$allowed = array('pdf', 'jpg', 'jpeg', 'png');
+				$ext = strtolower(pathinfo($_FILES['reseller_certificate']['name'], PATHINFO_EXTENSION));
+				if (in_array($ext, $allowed)) {
+					$filename = 'reseller_' . (int)$customer_id . '_' . time() . '.' . $ext;
+					$upload_dir = DIR_IMAGE . 'catalog/reseller_certs/';
+					if (!is_dir($upload_dir)) {
+						@mkdir($upload_dir, 0755, true);
+					}
+					if (move_uploaded_file($_FILES['reseller_certificate']['tmp_name'], $upload_dir . $filename)) {
+						$cert_path = 'catalog/reseller_certs/' . $filename;
+						if (!class_exists('TaxExemptionHelper')) {
+							require_once(DIR_SYSTEM . 'library/tax_exemption_helper.php');
+						}
+						$helper = new TaxExemptionHelper($this->db, $this->config);
+						$helper->submitExemption($customer_id, array(
+							'exemption_type'     => 'resale',
+							'certificate_number' => !empty($this->request->post['reseller_cert_number']) ? $this->request->post['reseller_cert_number'] : 'Uploaded at registration',
+							'issuing_state'      => !empty($this->request->post['reseller_cert_state']) ? $this->request->post['reseller_cert_state'] : '',
+							'certificate_file'   => $cert_path,
+							'business_name'      => trim($this->request->post['firstname'] . ' ' . $this->request->post['lastname'])
+						));
+					}
+				}
+			}
 
 			// Clear any previous login attempts for unregistered accounts.
 			$this->model_account_customer->deleteLoginAttempts($this->request->post['email']);
@@ -206,6 +234,9 @@ class ControllerAccountRegister extends Controller {
 		} else {
 			$data['agree'] = false;
 		}
+
+		$data['reseller_cert_number'] = isset($this->request->post['reseller_cert_number']) ? $this->request->post['reseller_cert_number'] : '';
+		$data['reseller_cert_state']  = isset($this->request->post['reseller_cert_state']) ? $this->request->post['reseller_cert_state'] : '';
 
 		$data['column_left'] = $this->load->controller('common/column_left');
 		$data['column_right'] = $this->load->controller('common/column_right');

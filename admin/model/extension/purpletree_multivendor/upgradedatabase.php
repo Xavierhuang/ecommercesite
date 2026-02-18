@@ -94,6 +94,10 @@ class ModelExtensionPurpletreeMultivendorUpgradedatabase extends Model{
 			if($query->num_rows){} else {
 		        $this->db->query("INSERT INTO `" . DB_PREFIX . "event` ( `code`, `trigger`, `action`, `status`) VALUES ('pts_editShippingCharge', 'admin/model/catalog/product/editProduct/after', 'extension/purpletree_multivendor/events/editShippingCharge', 1)");
 		   }
+		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "event WHERE  code = 'pts_seller_order_placed_notify'");
+			if($query->num_rows){} else {
+		        $this->db->query("INSERT INTO `" . DB_PREFIX . "event` ( `code`, `trigger`, `action`, `status`) VALUES ('pts_seller_order_placed_notify', 'catalog/model/checkout/order/addOrderHistory/after', 'extension/account/purpletree_multivendor/events/afterAddOrderHistory', 1)");
+		   }
 		///****end admin event**** ///
 		////free shipping///
 		$field_query = $this->db->query("SHOW COLUMNS FROM `" . DB_PREFIX . "product` LIKE 'shipping_charge'");

@@ -4,6 +4,8 @@ final class Openbay {
 	private $installed_modules = array();
 	public $installed_markets = array();
 	private $logging = 1;
+	private $logger;
+	private $data = array();
 
 	public function __construct($registry) {
 		// OpenBay Pro
@@ -15,7 +17,7 @@ final class Openbay {
 			foreach ($this->installed_markets as $market) {
 				$class = '\openbay\\'. ucfirst($market);
 
-				$this->{$market} = new $class($registry);
+				$this->data[$market] = new $class($registry);
 			}
 		}
 
@@ -23,6 +25,9 @@ final class Openbay {
 	}
 
 	public function __get($name) {
+		if (isset($this->data[$name])) {
+			return $this->data[$name];
+		}
 		return $this->registry->get($name);
 	}
 

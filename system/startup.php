@@ -1,6 +1,6 @@
 <?php
-// Error Reporting
-error_reporting(E_ALL);
+// Error Reporting (exclude E_DEPRECATED to avoid Proxy dynamic property warnings on PHP 8.2+)
+error_reporting(E_ALL & ~E_DEPRECATED);
 
 // Check Version
 if (version_compare(phpversion(), '5.4.0', '<') == true) {

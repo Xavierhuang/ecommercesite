@@ -4,7 +4,8 @@ class ModelExtensionShippingPurpletreeShipping extends Model {
 			$this->load->language('extension/shipping/purpletree_shipping');
 			$method_data = array();
 			$quote_data = array();
-			$getshippingcharge = (string)$this->cart->getSellerShippingCharge($address);
+			$this->load->model('extension/purpletree_multivendor/quick_order');
+			$getshippingcharge = (string)$this->model_extension_purpletree_multivendor_quick_order->getQuoteShipping($address);
 			// if($getshippingcharge == '0') {
 			// $getshippingcharge = '0';
 			// }

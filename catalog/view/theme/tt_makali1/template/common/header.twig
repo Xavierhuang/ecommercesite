@@ -11,11 +11,24 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <title>{{ title }}</title>
 <base href="{{ base }}" />
+<meta name="robots" content="{{ robots }}" />
 {% if description %}
-<meta name="description" content="{{ description }}" />
+<meta name="description" content="{{ description|e('html_attr') }}" />
 {% endif %}
 {% if keywords %}
-<meta name="keywords" content="{{ keywords }}" />
+<meta name="keywords" content="{{ keywords|e('html_attr') }}" />
+{% endif %}
+{% if og_title %}
+<meta property="og:title" content="{{ og_title|e('html_attr') }}" />
+<meta property="og:description" content="{{ og_description|default('')|e('html_attr') }}" />
+<meta property="og:type" content="{{ og_type }}" />
+<meta property="og:url" content="{{ og_url }}" />
+{% if og_image %}<meta property="og:image" content="{{ og_image }}" />{% endif %}
+<meta property="og:site_name" content="{{ og_site_name|e('html_attr') }}" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="{{ og_title|e('html_attr') }}" />
+<meta name="twitter:description" content="{{ og_description|default('')|e('html_attr') }}" />
+{% if og_image %}<meta name="twitter:image" content="{{ og_image }}" />{% endif %}
 {% endif %}
 <link href="catalog/view/javascript/jquery/owl-carousel/css/owl.carousel.min.css" rel="stylesheet" />
 <link href="catalog/view/javascript/jquery/owl-carousel/css/owl.theme.green.min.css" rel="stylesheet" />
@@ -56,6 +69,9 @@
 {% for analytic in analytics %}
 {{ analytic }}
 {% endfor %}
+{% if analytics_helper_html %}
+{{ analytics_helper_html|raw }}
+{% endif %}
 {% if theme_option_status[store_id] %}
   <script src="https://ajax.googleapis.com/ajax/libs/webfont/1.5.10/webfont.js"></script>
   <script>

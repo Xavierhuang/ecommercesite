@@ -1093,6 +1093,10 @@ a:hover,.banner-3 a:hover::before,
 #cart > button:before {
 	content: "\e615";
 }
+.box-cart .wishlist a .fa-heart { display: inline-block; font-size: 26px; vertical-align: top; margin-right: 4px; }
+.box-cart .wishlist a:before { content: none !important; display: none !important; }
+#cart > button .fa-shopping-cart { display: inline-block; font-size: 26px; vertical-align: top; margin-right: 4px; }
+#cart > button:before { content: none !important; display: none !important; }
 #cart{
 	width: auto;
 	display: inline-block;

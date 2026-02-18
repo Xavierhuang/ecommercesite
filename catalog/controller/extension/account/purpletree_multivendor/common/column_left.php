@@ -134,8 +134,13 @@ class ControllerExtensionAccountPurpletreeMultivendorCommonColumnLeft extends Co
 						$client_id=$this->config->get('payment_pts_stripe_client_id_test');
 					}
 					if($client_id!=NULL){
-					$stripe_connect = 'https://dashboard.stripe.com/express/oauth/authorize?response_type=code&client_id='.$client_id.'&scope=read_write';
-					/* $stripe_connect_standard= 'https://dashboard.stripe.com/oauth/authorize?response_type=code&client_id='.$client_id.'&scope=read_write'; */
+					$use_account_link = $this->config->get('payment_pts_stripe_use_account_link') !== '0';
+					if ($use_account_link) {
+						$stripe_connect = str_replace('&amp;', '&', $this->url->link('extension/account/purpletree_multivendor/stripeconnect', 'start=1', true));
+					} else {
+						$redirect_uri = str_replace('&amp;', '&', $this->url->link('extension/account/purpletree_multivendor/stripeconnect', '', true));
+						$stripe_connect = 'https://connect.stripe.com/oauth/authorize?response_type=code&client_id='.$client_id.'&scope=read_write&redirect_uri=' . urlencode($redirect_uri);
+					}
 					$data['a_href']='<a id="pts-seller-panel-stripe-connect" class="pts-list-group-item" href="'.$stripe_connect.'" >';
 					$data['a']='</a>';
 				}

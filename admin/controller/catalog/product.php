@@ -20,7 +20,8 @@ class ControllerCatalogProduct extends Controller {
 		$this->load->model('catalog/product');
 
 		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-			$this->model_catalog_product->addProduct($this->request->post);
+			$product_id = $this->model_catalog_product->addProduct($this->request->post);
+			$this->triggerProductVisibility($product_id);
 
 			$this->session->data['success'] = $this->language->get('text_success');
 
@@ -73,6 +74,7 @@ class ControllerCatalogProduct extends Controller {
 
 		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
 			$this->model_catalog_product->editProduct($this->request->get['product_id'], $this->request->post);
+			$this->triggerProductVisibility((int)$this->request->get['product_id']);
 
 			$this->session->data['success'] = $this->language->get('text_success');
 
@@ -1320,5 +1322,19 @@ class ControllerCatalogProduct extends Controller {
 
 		$this->response->addHeader('Content-Type: application/json');
 		$this->response->setOutput(json_encode($json));
+	}
+
+	/**
+	 * Clear product/category cache so new/updated products show on site immediately (scope 2.1).
+	 */
+	private function triggerProductVisibility($product_id) {
+		if (!class_exists('ProductVisibilityHelper')) {
+			require_once(DIR_SYSTEM . 'library/product_visibility_helper.php');
+		}
+		$cache = $this->registry->get('cache');
+		if ($cache && $product_id) {
+			$helper = new ProductVisibilityHelper($this->db, $cache);
+			$helper->forceProductVisible((int)$product_id);
+		}
 	}
 }

@@ -93,6 +93,10 @@ class ControllerStartupStartup extends Controller {
 				
 
 		// new code -29-11-2023
+		// Ensure session data is an array (PHP 8.2+ compatibility)
+		if (!is_array($this->session->data)) {
+			$this->session->data = array();
+		}
 		if (!isset($this->session->data['language']) || ($this->session->data['language'] !== false && $this->session->data['language'] != $code)) {
 			$this->session->data['language'] = $code;
 		}

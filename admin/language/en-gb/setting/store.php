@@ -60,6 +60,11 @@ $_['entry_stock_checkout']         = 'Stock Checkout';
 $_['entry_logo']                   = 'Store Logo';
 $_['entry_icon']                   = 'Icon';
 $_['entry_secure']                 = 'Use SSL';
+$_['entry_ga4_measurement_id']     = 'Google Analytics 4 Measurement ID';
+$_['entry_facebook_pixel_id']      = 'Facebook Pixel ID';
+
+// Tab
+$_['tab_analytics']                = 'Analytics';
 
 // Help
 $_['help_url']                     = 'Include the full URL to your store. Make sure to add \'/\' at the end. Example: http://www.yourdomain.com/path/<br /><br />Don\'t use directories to create a new store. You should always point another domain or sub domain to your hosting.';
@@ -82,6 +87,8 @@ $_['help_stock_display']           = 'Display stock quantity on the product page
 $_['help_stock_checkout']          = 'Allow customers to still checkout if the products they are ordering are not in stock.';
 $_['help_icon']                    = 'The icon should be a PNG that is 16px x 16px.';
 $_['help_secure']                  = 'To use SSL check with your host if a SSL certificate is installed.';
+$_['help_ga4_measurement_id']      = 'Your GA4 Measurement ID (e.g. G-XXXXXXXXXX). Leave empty to disable.';
+$_['help_facebook_pixel_id']       = 'Your Facebook Pixel ID (numeric). Leave empty to disable.';
 
 // Error
 $_['error_warning']                = 'Warning: Please check the form carefully for errors!';

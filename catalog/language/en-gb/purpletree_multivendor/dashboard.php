@@ -83,3 +83,4 @@ $_['text_sellercoupons']               = 			'Seller Coupons';
 $_['text_seller_returns']               = 			'Returns';
 $_['text_stripe_connect']               = 			'Connect';
 $_['text_stripe_connected']               = 		'Connected';
+$_['text_stripe_connect_required']        = 			'Complete store information and get approved first to connect Stripe.';

@@ -48,6 +48,7 @@ class ControllerAccountLogin extends Controller {
 		$this->load->language('account/login');
 
 		$this->document->setTitle($this->language->get('heading_title'));
+		$this->document->setRobots('noindex, nofollow');
 
 		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
 			// Unset guest

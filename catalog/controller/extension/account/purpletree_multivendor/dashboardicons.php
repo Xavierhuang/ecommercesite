@@ -182,42 +182,95 @@ class ControllerExtensionAccountPurpletreeMultivendorDashboardicons extends Cont
 				}
 			 }
 			if($stripe_status){
-				$data['a_href']='';	
+				$data['a_href']='';
 				$data['a']='';
-				$payment_mode = $this->config->get('payment_pts_stripe_payment_mode');
-				$stripe = array();
-				if($payment_mode){
-					$client_id=$this->config->get('payment_pts_stripe_client_id_live');
-				} else {
-					$client_id=$this->config->get('payment_pts_stripe_client_id_test');
-				}
-				
-				if ($client_id==NULL) {
-					if ($this->config->get('payment_pts_stripe_debug')) {
-						$this->log->write('Client Id is blank. Please enter client id in stripe payment setting');
+				$data['stripe_connect_eligible'] = false;
+				$store_ok = !empty($store_detail) && isset($store_detail['store_status']);
+				if ($store_ok) {
+					$payment_mode = $this->config->get('payment_pts_stripe_payment_mode');
+					$stripe = array();
+					if($payment_mode){
+						$client_id=$this->config->get('payment_pts_stripe_client_id_live');
+					} else {
+						$client_id=$this->config->get('payment_pts_stripe_client_id_test');
 					}
-				}
-				if($client_id!=NULL){
-				    $stripe_connect = 'https://dashboard.stripe.com/express/oauth/authorize?response_type=code&client_id='.$client_id.'&scope=read_write';
-				
-				    /* $stripe_connect_standard= 'https://dashboard.stripe.com/oauth/authorize?response_type=code&client_id='.$client_id.'&scope=read_write'; */
-				    $data['a_href']='<a href="'.$stripe_connect.'">';	
-				    $data['a']='</a>';
-                    	
-					$this->load->model('extension/purpletree_multivendor/stripeconnect');
-	                $num_of_acc1 = $this->model_extension_purpletree_multivendor_stripeconnect->checkAccountExistwithsellerid($this->customer->getId());
-                    if($num_of_acc1){
-                        $data['text_stripe_connect']= $this->language->get('text_stripe_connected');
-                        $data['a_href']='';	
-                        $data['a']='';	
-                    }
+					if ($client_id==NULL) {
+						if ($this->config->get('payment_pts_stripe_debug')) {
+							$this->log->write('Client Id is blank. Please enter client id in stripe payment setting');
+						}
+					}
+					if($client_id!=NULL){
+						$data['stripe_connect_eligible'] = true;
+						$use_account_link = $this->config->get('payment_pts_stripe_use_account_link') !== '0';
+						if ($use_account_link) {
+							$stripe_connect = str_replace('&amp;', '&', $this->url->link('extension/account/purpletree_multivendor/stripeconnect', 'start=1', true));
+						} else {
+							$redirect_uri = str_replace('&amp;', '&', $this->url->link('extension/account/purpletree_multivendor/stripeconnect', '', true));
+							$stripe_connect = 'https://connect.stripe.com/oauth/authorize?response_type=code&client_id='.$client_id.'&scope=read_write&redirect_uri=' . urlencode($redirect_uri);
+						}
+						$data['a_href']='<a href="'.$stripe_connect.'">';
+						$data['a']='</a>';
+						$this->load->model('extension/purpletree_multivendor/stripeconnect');
+						$num_of_acc1 = $this->model_extension_purpletree_multivendor_stripeconnect->checkAccountExistwithsellerid($this->customer->getId());
+						if($num_of_acc1){
+							$data['text_stripe_connect']= $this->language->get('text_stripe_connected');
+							$data['a_href']='';
+							$data['a']='';
+						}
+					}
+				} else {
+					$data['text_stripe_connect_required'] = $this->language->get('text_stripe_connect_required');
 				}
 			}
-	//stripe connect		
-			
+	//stripe connect
+			// Onboarding checkpoints (scope 2.1.5, 2.2)
+			$data['onboarding_steps'] = $this->getOnboardingCheckpoints($store_detail, $data);
+
 			$data['sellerenquiries'] = $this->url->link('extension/account/purpletree_multivendor/sellerenquiries', '', true);
 			$data['sellercoupons'] = $this->url->link('extension/account/purpletree_multivendor/sellercoupons', '', true);
 			$data['seller_product_returns'] = $this->url->link('extension/account/purpletree_multivendor/product_returns', '', true);
 			$this->response->setOutput($this->load->view('account/purpletree_multivendor/dashboardicons', $data));
-		}	
-}?>
+		}
+
+		/**
+		 * Onboarding checkpoints for suppliers (scope 2.1.5, 2.2).
+		 * Returns list of steps with done (bool) and label/link.
+		 */
+		private function getOnboardingCheckpoints($store_detail, $data) {
+			$steps = array();
+			$store_id = isset($store_detail['id']) ? (int)$store_detail['id'] : 0;
+
+			$steps[] = array(
+				'label' => 'Store information completed',
+				'done'  => !empty($store_detail['store_name']),
+				'link'  => isset($data['sellerstore']) ? $data['sellerstore'] : ''
+			);
+
+			$stripe_done = false;
+			if ($this->config->get('payment_pts_stripe_status')) {
+				$this->load->model('extension/purpletree_multivendor/stripeconnect');
+				$stripe_done = (bool)$this->model_extension_purpletree_multivendor_stripeconnect->checkAccountExistwithsellerid($this->customer->getId());
+			} else {
+				$stripe_done = true;
+			}
+			$steps[] = array(
+				'label' => 'Payment (Stripe) connected',
+				'done'  => $stripe_done,
+				'link'  => ''
+			);
+
+			$product_count = 0;
+			if ($store_id) {
+				$q = $this->db->query("SELECT COUNT(*) AS total FROM " . DB_PREFIX . "purpletree_vendor_products WHERE seller_id = '" . (int)$this->customer->getId() . "'");
+				$product_count = (int)$q->row['total'];
+			}
+			$steps[] = array(
+				'label' => 'At least one product added',
+				'done'  => $product_count > 0,
+				'link'  => isset($data['sellerproduct']) ? $data['sellerproduct'] : ''
+			);
+
+			return $steps;
+		}
+	}
+?>

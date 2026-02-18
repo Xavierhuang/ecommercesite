@@ -1,4 +1,10 @@
 {{ header }}
+{% if json_ld_product %}
+<script type="application/ld+json">{{ json_ld_product|raw }}</script>
+{% endif %}
+{% if json_ld_breadcrumb %}
+<script type="application/ld+json">{{ json_ld_breadcrumb|raw }}</script>
+{% endif %}
 <div id="product-product" class="container">
     <ul class="breadcrumb">
         {% for breadcrumb in breadcrumbs %}

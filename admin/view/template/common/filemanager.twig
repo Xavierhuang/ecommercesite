@@ -148,8 +148,23 @@ $('#button-upload').on('click', function() {
 					}
 
 					if (json['success']) {
-						alert(json['success']);
-
+						if (json['path'] && json['thumb']) {
+							var name = json['path'].split('/').pop();
+							var row = $('<div class="col-sm-3 col-xs-6 text-center">')
+								.append($('<a href="#" class="thumbnail">').append($('<img>').attr({ src: json['thumb'], alt: name, title: name })))
+								.append($('<label>').append($('<input type="checkbox" name="path[]">').val(json['path'])).append(document.createTextNode(' ' + name)));
+							$('#filemanager .modal-body .row').first().prepend(row);
+							{% if target %}
+							$('a.thumbnail', row).on('click', function(e) {
+								e.preventDefault();
+								{% if thumb %}
+								$('#{{ thumb }}').find('img').attr('src', $(this).find('img').attr('src'));
+								{% endif %}
+								$('#{{ target }}').val($(this).parent().find('input').val());
+								$('#modal-image').modal('hide');
+							});
+							{% endif %}
+						}
 						$('#button-refresh').trigger('click');
 					}
 				},

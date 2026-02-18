@@ -58,9 +58,8 @@
 	</div>
 	
 </div>
-
-<script >
-    $(document).ready(function () {
+<script type="text/javascript">
+$(document).ready(function () {
         var flag = false;
         var ajax_search_enable = $('#ajax-search-enable').val();
         
@@ -105,7 +104,7 @@
         });
 
         $('#btn-search-category').click(function () {
-            var url = '{{ search_action }}';
+            var url = ($('base').attr('href') || '') + 'index.php?route=product/search';
             var text_search = $('#text-search').val();
             if(text_search) {
                 url += '&search=' + encodeURIComponent(text_search);
@@ -150,7 +149,7 @@
         
         function ajaxSearch(text_search, cate_search) {
             $.ajax({
-                url         : '{{ search_ajax_action }}',
+                url         : ($('base').attr('href') || '') + 'index.php?route=extension/module/ocsearchcategory/ajaxSearch',
                 type        : 'post',
                 data        : { text_search : text_search, cate_search : cate_search },
                 beforeSend  : function () {
@@ -165,5 +164,5 @@
             });
         }
 
-    });    
+});
 </script>

@@ -642,6 +642,22 @@ class ControllerSettingStore extends Controller {
 			$data['config_secure'] = '';
 		}
 
+		if (isset($this->request->post['config_ga4_measurement_id'])) {
+			$data['config_ga4_measurement_id'] = $this->request->post['config_ga4_measurement_id'];
+		} elseif (isset($store_info['config_ga4_measurement_id'])) {
+			$data['config_ga4_measurement_id'] = $store_info['config_ga4_measurement_id'];
+		} else {
+			$data['config_ga4_measurement_id'] = '';
+		}
+
+		if (isset($this->request->post['config_facebook_pixel_id'])) {
+			$data['config_facebook_pixel_id'] = $this->request->post['config_facebook_pixel_id'];
+		} elseif (isset($store_info['config_facebook_pixel_id'])) {
+			$data['config_facebook_pixel_id'] = $store_info['config_facebook_pixel_id'];
+		} else {
+			$data['config_facebook_pixel_id'] = '';
+		}
+
 		$data['header'] = $this->load->controller('common/header');
 		$data['column_left'] = $this->load->controller('common/column_left');
 		$data['footer'] = $this->load->controller('common/footer');

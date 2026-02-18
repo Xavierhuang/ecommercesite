@@ -10,6 +10,27 @@ class ControllerAccountAccount extends Controller {
 		$this->load->language('account/account');
 
 		$this->document->setTitle($this->language->get('heading_title'));
+		$this->document->setRobots('noindex, nofollow');
+
+		$data['text_my_account'] = $this->language->get('text_my_account');
+		$data['text_my_orders'] = $this->language->get('text_my_orders');
+		$data['text_my_affiliate'] = $this->language->get('text_my_affiliate');
+		$data['text_my_newsletter'] = $this->language->get('text_my_newsletter');
+		$data['text_edit'] = $this->language->get('text_edit');
+		$data['text_password'] = $this->language->get('text_password');
+		$data['text_address'] = $this->language->get('text_address');
+		$data['text_credit_card'] = $this->language->get('text_credit_card');
+		$data['text_wishlist'] = $this->language->get('text_wishlist');
+		$data['text_order'] = $this->language->get('text_order');
+		$data['text_download'] = $this->language->get('text_download');
+		$data['text_reward'] = $this->language->get('text_reward');
+		$data['text_return'] = $this->language->get('text_return');
+		$data['text_transaction'] = $this->language->get('text_transaction');
+		$data['text_newsletter'] = $this->language->get('text_newsletter');
+		$data['text_recurring'] = $this->language->get('text_recurring');
+		$data['text_affiliate_add'] = $this->language->get('text_affiliate_add');
+		$data['text_affiliate_edit'] = $this->language->get('text_affiliate_edit');
+		$data['text_tracking'] = $this->language->get('text_tracking');
 
 		$data['breadcrumbs'] = array();
 
@@ -38,15 +59,18 @@ class ControllerAccountAccount extends Controller {
 		$data['credit_cards'] = array();
 		
 		$files = glob(DIR_APPLICATION . 'controller/extension/credit_card/*.php');
-		
+		if (!$files) {
+			$files = array();
+		}
 		foreach ($files as $file) {
 			$code = basename($file, '.php');
 			
 			if ($this->config->get('payment_' . $code . '_status') && $this->config->get('payment_' . $code . '_card')) {
 				$this->load->language('extension/credit_card/' . $code, 'extension');
-
+				$ext = $this->language->get('extension');
+				$name = (is_object($ext) && method_exists($ext, 'get')) ? $ext->get('heading_title') : $code;
 				$data['credit_cards'][] = array(
-					'name' => $this->language->get('extension')->get('heading_title'),
+					'name' => $name,
 					'href' => $this->url->link('extension/credit_card/' . $code, '', true)
 				);
 			}

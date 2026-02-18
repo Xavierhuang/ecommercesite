@@ -19,7 +19,12 @@ class Log {
 	 * @param	string	$filename
  	*/
 	public function __construct($filename) {
-		$this->handle = fopen(DIR_LOGS . $filename, 'a');
+		$path = DIR_LOGS . $filename;
+		if (!is_dir(DIR_LOGS)) {
+			@mkdir(DIR_LOGS, 0755, true);
+		}
+		$handle = @fopen($path, 'a');
+		$this->handle = (is_resource($handle)) ? $handle : null;
 	}
 	
 	/**
@@ -28,7 +33,9 @@ class Log {
      * @param	string	$message
      */
 	public function write($message) {
-		fwrite($this->handle, date('Y-m-d G:i:s') . ' - ' . print_r($message, true) . "\n");
+		if ($this->handle !== null && is_resource($this->handle)) {
+			@fwrite($this->handle, date('Y-m-d G:i:s') . ' - ' . print_r($message, true) . "\n");
+		}
 	}
 	
 	/**
@@ -36,6 +43,9 @@ class Log {
      *
      */
 	public function __destruct() {
-		fclose($this->handle);
+		if ($this->handle !== null && is_resource($this->handle)) {
+			fclose($this->handle);
+			$this->handle = null;
+		}
 	}
 }

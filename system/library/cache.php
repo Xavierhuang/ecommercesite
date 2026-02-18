@@ -21,6 +21,9 @@ class Cache {
 	 *
  	*/
 	public function __construct($adaptor, $expire = 3600) {
+		if ($adaptor === 'redis' && !extension_loaded('redis')) {
+			$adaptor = 'file';
+		}
 		$class = 'Cache\\' . $adaptor;
 
 		if (class_exists($class)) {

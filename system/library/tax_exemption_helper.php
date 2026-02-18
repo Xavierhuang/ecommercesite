@@ -14,33 +14,40 @@ class TaxExemptionHelper {
 	
 	/**
 	 * Check if customer has valid tax exemption
+	 * Returns false if table does not exist (e.g. install-enhancements.sql not run).
 	 */
 	public function hasValidExemption($customer_id) {
-		$query = $this->db->query("
-			SELECT * FROM " . DB_PREFIX . "customer_tax_exemption 
-			WHERE customer_id = '" . (int)$customer_id . "' 
-			AND status = 'approved'
-			AND (expiry_date = '0000-00-00' OR expiry_date >= CURDATE())
-		");
-		
-		return $query->num_rows > 0;
+		try {
+			$query = $this->db->query("
+				SELECT * FROM " . DB_PREFIX . "customer_tax_exemption 
+				WHERE customer_id = '" . (int)$customer_id . "' 
+				AND status = 'approved'
+				AND (expiry_date = '0000-00-00' OR expiry_date >= CURDATE())
+			");
+			return $query->num_rows > 0;
+		} catch (\Throwable $e) {
+			return false;
+		}
 	}
 	
 	/**
 	 * Get customer tax exemption details
+	 * Returns null if table does not exist.
 	 */
 	public function getExemptionDetails($customer_id) {
-		$query = $this->db->query("
-			SELECT * FROM " . DB_PREFIX . "customer_tax_exemption 
-			WHERE customer_id = '" . (int)$customer_id . "' 
-			ORDER BY date_added DESC 
-			LIMIT 1
-		");
-		
-		if ($query->num_rows) {
-			return $query->row;
+		try {
+			$query = $this->db->query("
+				SELECT * FROM " . DB_PREFIX . "customer_tax_exemption 
+				WHERE customer_id = '" . (int)$customer_id . "' 
+				ORDER BY date_added DESC 
+				LIMIT 1
+			");
+			if ($query->num_rows) {
+				return $query->row;
+			}
+		} catch (\Throwable $e) {
+			// Table may not exist
 		}
-		
 		return null;
 	}
 	

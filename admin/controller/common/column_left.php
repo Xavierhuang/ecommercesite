@@ -324,7 +324,13 @@ class ControllerCommonColumnLeft extends Controller {
 					'children' => array()		
 				);
 			}
-						
+			if ($this->user->hasPermission('access', 'customer/tax_exemption')) {
+				$customer[] = array(
+					'name'	   => $this->language->get('text_tax_exemption'),
+					'href'     => $this->url->link('customer/tax_exemption', 'user_token=' . $this->session->data['user_token'], true),
+					'children' => array()
+				);
+			}
 			if ($this->user->hasPermission('access', 'customer/custom_field')) {		
 				$customer[] = array(
 					'name'	   => $this->language->get('text_custom_field'),

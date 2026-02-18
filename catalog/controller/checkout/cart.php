@@ -4,6 +4,7 @@ class ControllerCheckoutCart extends Controller {
 		$this->load->language('checkout/cart');
 
 		$this->document->setTitle($this->language->get('heading_title'));
+		$this->document->setRobots('noindex, nofollow');
 
 		$data['breadcrumbs'] = array();
 

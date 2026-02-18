@@ -9,6 +9,8 @@ $_['text_account_already'] = 'If you already have an account with us, please log
 $_['text_your_details']    = 'Your Personal Details';
 $_['text_newsletter']      = 'Newsletter';
 $_['text_your_password']   = 'Your Password';
+$_['text_reseller_exemption'] = 'Reseller Tax Exemption (optional)';
+$_['text_reseller_exemption_help'] = 'If you are a reseller, you may upload your reseller certificate here. Once verified by the store, sales tax will be removed from your orders.';
 $_['text_agree']           = 'I have read and agree to the <a href="%s" class="agree"><b>%s</b></a>';
 
 // Entry
@@ -18,6 +20,9 @@ $_['entry_lastname']       = 'Last Name';
 $_['entry_email']          = 'E-Mail';
 $_['entry_telephone']      = 'Telephone';
 $_['entry_newsletter']     = 'Subscribe';
+$_['entry_reseller_certificate'] = 'Reseller certificate (PDF or image)';
+$_['entry_reseller_cert_number'] = 'Certificate number';
+$_['entry_reseller_cert_state']  = 'Issuing state';
 $_['entry_password']       = 'Password';
 $_['entry_confirm']        = 'Password Confirm';
 

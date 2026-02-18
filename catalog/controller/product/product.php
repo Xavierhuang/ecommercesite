@@ -217,7 +217,14 @@ class ControllerProductProduct extends Controller {
 			$this->document->setTitle($product_info['meta_title']);
 			$this->document->setDescription($product_info['meta_description']);
 			$this->document->setKeywords($product_info['meta_keyword']);
-			$this->document->addLink($this->url->link('product/product', 'product_id=' . $this->request->get['product_id']), 'canonical');
+			$canonical_url = $this->url->link('product/product', 'product_id=' . $this->request->get['product_id'], true);
+			$this->document->addLink($canonical_url, 'canonical');
+			$this->document->setOgUrl($canonical_url);
+			$this->document->setOgType('product');
+			if ($product_info['image']) {
+				$server = $this->request->server['HTTPS'] ? $this->config->get('config_ssl') : $this->config->get('config_url');
+				$this->document->setOgImage(rtrim($server, '/') . '/image/' . $product_info['image']);
+			}
 			$this->document->addScript('catalog/view/javascript/jquery/magnific/jquery.magnific-popup.min.js');
 			$this->document->addStyle('catalog/view/javascript/jquery/magnific/magnific-popup.css');
 			$this->document->addScript('catalog/view/javascript/jquery/datetimepicker/moment/moment.min.js');
@@ -461,7 +468,35 @@ class ControllerProductProduct extends Controller {
 			$data['recurrings'] = $this->model_catalog_product->getProfiles($this->request->get['product_id']);
 
 			$this->model_catalog_product->updateViewed($this->request->get['product_id']);
-			
+
+			$server = $this->request->server['HTTPS'] ? $this->config->get('config_ssl') : $this->config->get('config_url');
+			$server = rtrim($server, '/');
+			$product_image_url = $product_info['image'] ? $server . '/image/' . $product_info['image'] : '';
+			$schema_price = (float)($product_info['special'] ? $product_info['special'] : $product_info['price']);
+			$currency_code = isset($this->session->data['currency']) ? $this->session->data['currency'] : 'USD';
+			$data['json_ld_product'] = json_encode(array(
+				'@context' => 'https://schema.org',
+				'@type' => 'Product',
+				'name' => $product_info['name'],
+				'description' => utf8_substr(trim(strip_tags(html_entity_decode($product_info['description'], ENT_QUOTES, 'UTF-8'))), 0, 500),
+				'image' => $product_image_url ? array($product_image_url) : array(),
+				'sku' => $product_info['model'],
+				'url' => $canonical_url,
+				'offers' => array(
+					'@type' => 'Offer',
+					'url' => $canonical_url,
+					'priceCurrency' => $currency_code,
+					'price' => $schema_price,
+					'availability' => $product_info['quantity'] > 0 ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock'
+				)
+			), JSON_UNESCAPED_SLASHES);
+			$breadcrumb_list = array('@context' => 'https://schema.org', '@type' => 'BreadcrumbList', 'itemListElement' => array());
+			$pos = 1;
+			foreach ($data['breadcrumbs'] as $b) {
+				$breadcrumb_list['itemListElement'][] = array('@type' => 'ListItem', 'position' => $pos++, 'name' => $b['text'], 'item' => $b['href']);
+			}
+			$data['json_ld_breadcrumb'] = json_encode($breadcrumb_list, JSON_UNESCAPED_SLASHES);
+
             $data['checkout'] = $this->url->link('checkout/checkout');
 			$data['column_left'] = $this->load->controller('common/column_left');
 			$data['column_right'] = $this->load->controller('common/column_right');

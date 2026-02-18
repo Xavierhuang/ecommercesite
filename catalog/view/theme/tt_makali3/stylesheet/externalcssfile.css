@@ -114,16 +114,27 @@ header .header-inner {
     transition-duration: .3s;
 }
 
-.header-inner 
- .inner-inner {
+.header-inner .inner {
+    width: 100%;
+}
+
+.header-inner .inner-inner {
     display: flex;
     width: 100%;
     align-items: center;
+    justify-content: space-between;
+    flex-wrap: nowrap;
 }
 
 .header-inner .inner-inner .col-hoz {
     position: static;
     transform: none;
+    flex: 1;
+    min-width: 0;
+}
+
+.header-inner .inner-inner .logo-container {
+    flex-shrink: 0;
 }
 
 .header-inner .inner-inner .col-hoz span {
@@ -164,6 +175,96 @@ header .header-inner {
 
 #top .btn-group .btn-link i {
     color: #fff !important;
+}
+
+header .box-cart {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    position: static;
+    margin: 0;
+    flex-shrink: 0;
+}
+
+/* Equal space between all three icons: same margin on each so gaps are identical */
+header .box-cart > *:not(script) {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+    flex-shrink: 0;
+    margin-left: 12px;
+    margin-right: 12px;
+}
+header .box-cart > *:not(script):first-child {
+    margin-left: 0;
+}
+header .box-cart > *:not(script):last-child {
+    margin-right: 0;
+}
+
+header .box-cart > script {
+    display: none !important;
+}
+
+header .box-cart .wishlist,
+header .box-cart #cart {
+    display: flex;
+    align-items: center;
+}
+
+header .box-cart #search-by-category,
+header .box-cart .btn-group {
+    display: flex;
+    align-items: center;
+    margin-left: 12px;
+    margin-right: 12px;
+    width: auto;
+    flex: 0 0 auto;
+}
+
+/* First icon (search) gets no left margin; override any other margin */
+header .box-cart #search-by-category {
+    width: auto;
+    margin-left: 0;
+}
+
+header .box-cart .search-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    line-height: 1;
+}
+
+/* Mobile responsive for header icons (equal spacing via margin) */
+@media (max-width: 991px) {
+    header .box-cart > *:not(script) { margin-left: 10px; margin-right: 10px; }
+    header .box-cart > *:not(script):first-child { margin-left: 0; }
+    header .box-cart > *:not(script):last-child { margin-right: 0; }
+    header .box-cart #search-by-category { margin-left: 0; }
+}
+
+@media (max-width: 767px) {
+    header .box-cart > *:not(script) { margin-left: 8px; margin-right: 8px; }
+    header .box-cart > *:not(script):first-child { margin-left: 0; }
+    header .box-cart > *:not(script):last-child { margin-right: 0; }
+    header .box-cart #search-by-category { margin-left: 0; }
+    header .box-cart .wishlist a .fa-heart,
+    header .box-cart #cart > button .fa-shopping-cart {
+        font-size: 22px;
+    }
+}
+
+@media (max-width: 480px) {
+    header .box-cart > *:not(script) { margin-left: 6px; margin-right: 6px; }
+    header .box-cart > *:not(script):first-child { margin-left: 0; }
+    header .box-cart > *:not(script):last-child { margin-right: 0; }
+    header .box-cart #search-by-category { margin-left: 0; }
+    header .box-cart .wishlist a .fa-heart,
+    header .box-cart #cart > button .fa-shopping-cart {
+        font-size: 20px;
+    }
 }
 
 .box-cart .dropdown-toggle, .wishlist a {

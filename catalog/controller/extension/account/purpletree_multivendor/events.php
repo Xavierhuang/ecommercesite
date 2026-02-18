@@ -280,7 +280,32 @@ class ControllerExtensionAccountPurpletreeMultivendorEvents extends Controller {
 		 $output = str_replace('</head>', '</head>'.$newheader, $output);
 
 	}
+	}
 
+	/**
+	 * After main order addOrderHistory: notify each seller when order is first confirmed (buyer already notified by mail/order).
+	 */
+	public function afterAddOrderHistory(&$route, &$args, &$output) {
+		if (!$this->config->get('module_purpletree_multivendor_status')) {
+			return;
+		}
+		$order_id = isset($args[0]) ? (int)$args[0] : 0;
+		$order_status_id = isset($args[1]) ? (int)$args[1] : 0;
+		if ($order_id <= 0 || $order_status_id <= 0) {
+			return;
+		}
+		$this->load->model('extension/purpletree_multivendor/sellerorder');
+		$sellers = $this->model_extension_purpletree_multivendor_sellerorder->getOrderSeller($order_id);
+		if (empty($sellers)) {
+			return;
+		}
+		$comment = '';
+		foreach ($sellers as $row) {
+			$seller_id = (int)$row['seller_id'];
+			if ($seller_id) {
+				$this->model_extension_purpletree_multivendor_sellerorder->addOrderHistory($order_id, $seller_id, $order_status_id, $comment, false, false, false);
+			}
+		}
 	}
 }
 ?>

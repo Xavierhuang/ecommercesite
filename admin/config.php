@@ -2,19 +2,20 @@
 define('DISPLAY_ERRORS', true);
 
 // HTTP
-define('HTTP_SERVER', 'http://diversiply.test/admin/');
-define('HTTP_CATALOG', 'http://diversiply.test/');
+define('HTTP_SERVER', 'http://localhost:8000/admin/');
+define('HTTP_CATALOG', 'http://localhost:8000/');
 
 // HTTPS
-define('HTTPS_SERVER', 'http://diversiply.test/admin/');
-define('HTTPS_CATALOG', 'http://diversiply.test/');
+define('HTTPS_SERVER', 'http://localhost:8000/admin/');
+define('HTTPS_CATALOG', 'http://localhost:8000/');
 
 // DIR - Local paths (use forward slashes)
-define('DIR_APPLICATION', 'F:/PROJECTS/WORK/Lockwood/2026/feb/dev.diversiply.co/admin/');
-define('DIR_SYSTEM', 'F:/PROJECTS/WORK/Lockwood/2026/feb/dev.diversiply.co/system/');
-define('DIR_IMAGE', 'F:/PROJECTS/WORK/Lockwood/2026/feb/dev.diversiply.co/image/');
-define('DIR_STORAGE', 'F:/PROJECTS/WORK/Lockwood/2026/feb/dev.diversiply.co/storage/');
-define('DIR_CATALOG', 'F:/PROJECTS/WORK/Lockwood/2026/feb/dev.diversiply.co/catalog/');
+$base = dirname(dirname(__FILE__)) . '/';
+define('DIR_APPLICATION', $base . 'admin/');
+define('DIR_SYSTEM', $base . 'system/');
+define('DIR_IMAGE', $base . 'image/');
+define('DIR_STORAGE', $base . 'storage/');
+define('DIR_CATALOG', $base . 'catalog/');
 define('DIR_LANGUAGE', DIR_APPLICATION . 'language/');
 define('DIR_TEMPLATE', DIR_APPLICATION . 'view/template/');
 define('DIR_CONFIG', DIR_SYSTEM . 'config/');
@@ -29,7 +30,7 @@ define('DIR_UPLOAD', DIR_STORAGE . 'upload/');
 define('DB_DRIVER', 'mysqli');
 define('DB_HOSTNAME', '127.0.0.1');
 define('DB_USERNAME', 'root');
-define('DB_PASSWORD', 'root');
+define('DB_PASSWORD', '');
 define('DB_DATABASE', 'dev_oc_4566');
 define('DB_PORT', '3306');
 define('DB_PREFIX', 'oc_');
